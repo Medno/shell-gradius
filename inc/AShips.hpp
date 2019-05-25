@@ -2,13 +2,9 @@
 #define ASHIPS_HPP
 
 #include <iostream>
+#include "Game.hpp"
 
-typedef struct	s_vector {
-	int	x;
-	int	y;
-}				t_vector;
-
-class	AShips {
+class	AShips: public Game {
 public:
 	virtual ~AShips( void ) {}
 	AShips( AShips const & src );
