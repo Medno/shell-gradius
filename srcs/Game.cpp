@@ -41,22 +41,25 @@ int			Game::getScore(void) const
 	return this->_score;
 }
 
-int		Game::_moveEnemies( AShips* const & ship ) {
+int		Game::_moveEnemies( t_ships* const & unit ) {
 	t_vector	positions;
+	AShips*	const &	ship = unit->ship;
 
+//	this->moveShot( ship->getShots() );
 	positions = ship->getPositions();
 	positions.x -= 1;
 	if ( positions.x == 1 )
-		this->pop( ship );
+		this->pop( unit );
 	else
 		ship->setPositions( positions );
 	return (1);
 }
 
-int		Game::_moveBoss( AShips* const & ship ) {
+int		Game::_moveBoss( t_ships* const & unit ) {
 	t_vector	positionsBoss;
 	t_vector	positionsPlayer = this->_ships->ship->getPositions();
 	// t_ships*	player = this->_ships;
+	AShips*	ship = unit->ship;
 
 	positionsBoss = ship->getPositions();
 	if (positionsBoss.x > positionsPlayer.x + 50)
@@ -69,7 +72,7 @@ int		Game::_moveBoss( AShips* const & ship ) {
 	else if (positionsBoss.y < positionsPlayer.y)
 		positionsBoss.y += 1;
 	if ( positionsBoss.x == 1 )
-		this->pop( ship );
+		this->pop( unit );
 	else
 		ship->setPositions( positionsBoss );
 	return (1);
@@ -90,9 +93,10 @@ void	Game::_spawnEnemy( void ) {
 	return ;
 }
 
-int		Game::_handlePlayer( AShips* const & ship ) {
+int		Game::_handlePlayer( t_ships* const & unit ) {
 	t_vector	positions;
 	int key = wgetch(this->_win);
+	AShips*	ship = unit->ship;
 
 	if (key != ERR) {
 		positions = ship->getPositions();
@@ -108,6 +112,8 @@ int		Game::_handlePlayer( AShips* const & ship ) {
 	}
 	if (key == ESC_KEY)
 		return ( GAME_EXIT );
+	if (key == ' ')
+		ship->fire();
 	return ( GAME_CONTINUE );
 }
 
@@ -133,21 +139,68 @@ int		Game::_checkPositions( void ) {
 t_stars	*clean(t_stars *univers)
 {
 	if (univers == NULL)
-		return NULL;
+	return NULL;
 	else if(univers->star->getCoordinates().x < 1 && univers->next != NULL)
-    {
-  //   	t_stars *tmp = univers;
+	{
+		//   	t_stars *tmp = univers;
 		// univers = univers->next;
 		// delete tmp->star;
 		// delete tmp;
-        return univers;
-    }
-    else
-        return univers;
+		return univers;
+	}
+	else
+	return univers;
+}
+
+int		Game::_destroyKilled( void ) {
+	if (!this->_ships)
+		return ( GAME_EXIT );
+
+	t_ships*	enemies;
+	t_ships*	nextEnemy;
+	t_shots*	shots = AShips::getShots();
+	t_shots*	prevShot;
+	int			del = 0;
+
+	while (shots) { // Check if the player is killed (first of linked list)
+		enemies =  this->_ships;
+		if (AShips::checkShotPosition( shots, enemies->ship->getPositions() )) {
+			AShips::popShots();
+			return ( GAME_EXIT );
+		}
+		shots = shots->next;
+	}
+	shots = AShips::getShots();
+	prevShot = shots;
+	while (shots) {
+		enemies = this->_ships;
+		nextEnemy = this->_ships->next;
+		while (!del && shots && nextEnemy) {
+			t_vector vecTmp = nextEnemy->ship->getPositions();
+			vecTmp.x -= 1;
+			if (AShips::checkShotPosition( shots, nextEnemy->ship->getPositions() )
+				|| AShips::checkShotPosition( shots, vecTmp )) {
+				shots = AShips::popShot(shots);
+				prevShot = shots;
+				this->pop(nextEnemy);
+				del = 1;
+			}
+			if (!del && enemies) {
+				enemies = enemies->next;
+				nextEnemy = enemies->next;
+			}
+		}
+		if (!del && shots) {
+			prevShot = shots;
+			shots = shots->next;
+		}
+		else
+			del = 0;
+	}
+	return ( GAME_EXIT );
 }
 
 int		Game::update ( void ) {
-
 	if (this->_checkPositions() == GAME_EXIT)
 		return ( GAME_EXIT );
 	t_stars*	univers = clean(this->_stars);
@@ -160,12 +213,13 @@ int		Game::update ( void ) {
 		}
 		univers = univers->next;
 	}
+	AShips::moveShots();
 	std::string	unitTypes[3] = {
 		"Player",
 		"Boss",
 		"Fighter"
 	};
-	int		(Game::*f[3])( AShips* const & ) = {
+	int		(Game::*f[3])( t_ships* const & ) = {
 		&Game::_handlePlayer,
 		&Game::_moveBoss,
 		&Game::_moveEnemies
@@ -176,11 +230,13 @@ int		Game::update ( void ) {
 	while ( unit ) {
 		for (int i = 0; i < len; i++) {
 			if (unit->ship->getType() == unitTypes[i]
-				&& (this->*f[i])(unit->ship) == GAME_EXIT)
+				&& (this->*f[i])(unit) == GAME_EXIT)
 				return ( GAME_EXIT );
 		}
 		unit = unit->next;
 	}
+	AShips::popBordersShots(this->_wSize);
+	this->_destroyKilled();
 	this->_spawnEnemy();
 	return ( GAME_CONTINUE );
 }
@@ -210,25 +266,36 @@ void	Game::push( AShips * const & ship ) {
 	return ;
 }
 
-void	Game::pop( AShips * const & ship ) {
-	t_ships*	tmp;
+void	Game::pop( t_ships * const & ship ) {
+	t_ships*	tmp = this->_ships;
 	t_ships*	toDelete;
 
 	tmp = this->_ships;
-	if (this->_ships->ship == ship) {
+	if (this->_ships == ship) {
 		this->_ships = this->_ships->next;
 		delete tmp->ship;
 		delete tmp;
 	}
 	else {
-		while ( tmp && tmp->next && tmp->next->ship != ship )
+		while ( tmp && tmp->next && tmp->next != ship )
 			tmp = tmp->next;
-		if ( !tmp->next || tmp->next->ship != ship )
+		if ( !tmp->next || tmp->next != ship )
 			return ;
 		toDelete = tmp->next;
 		tmp->next = toDelete->next;
 		delete toDelete->ship;
 		delete toDelete;
+	}
+
+	return ;
+}
+
+void		Game::_displayShots( void ) const {
+	t_shots	*list = AShips::getShots();
+
+	while (list) {
+		mvwprintw(this->_win, list->positions.y, list->positions.x, "-");
+		list = list->next;
 	}
 	return ;
 }
@@ -290,6 +357,7 @@ void		Game::display( void ) const {
 		mvwprintw(this->_win, position.y, position.x, "*");
 		univers = univers->next;
 	}
+	this->_displayShots();
 	while (unit) {
 //		std::cout << *(unit->ship);
 		if (unit->ship->getType() == "Player")

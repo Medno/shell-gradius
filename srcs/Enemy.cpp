@@ -25,6 +25,16 @@ Enemy &	Enemy::operator=( Enemy const & rhs ) {
 	return *this;
 }
 
+/*void	Enemy::moveShots( void ) {
+	t_shots*	shots = this->_shots;
+
+	while (shots) {
+		shots->positions.x -= 1;
+		shots = shots->next;
+	}
+	return ;
+}*/
+
 void	Enemy::spawn( void ) {
 //	this->addCoordinates();
 	return ;	

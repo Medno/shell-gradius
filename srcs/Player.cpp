@@ -25,6 +25,36 @@ Player::Player( t_vector const & coordinates ) : AShips( "Player", coordinates )
 }
 
 void	Player::fire( void ) {
-	std::cout << "Waw, nice shot Captain !" << std::endl;
+	t_shots*	shot = AShips::_shots;
+	t_vector	positions = this->getPositions();
+
+	if (!AShips::_shots) {
+		AShips::_shots = new t_shots;
+		AShips::_shots->enemy = 0;
+		AShips::_shots->positions.x = positions.x + 1;
+		AShips::_shots->positions.y = positions.y;
+		AShips::_shots->next = NULL;
+	}
+	else {
+		while (shot && shot->next)
+			shot = shot->next;
+		shot->next = new t_shots;
+		shot->enemy = 0;
+		shot->next->positions.x = positions.x + 1;
+		shot->next->positions.y = positions.y;
+		shot->next->next = NULL;
+	}
+	//std::cout << "Waw, nice shot Captain !" << std::endl;
 	return ;
 }
+/*
+void	Player::moveShots( void ) {
+	t_shots*	shots = this->_shots;
+
+	while (shots) {
+		shots->positions.x += 1;
+		shots = shots->next;
+	}
+	return ;
+}
+*/

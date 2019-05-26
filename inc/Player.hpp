@@ -11,7 +11,8 @@ public:
 	Player &	operator=( Player const & );
 
 	Player( t_vector const & );
-	void	fire( void );
+	virtual void	fire( void );
+//	virtual void	moveShots( void );
 
 private:
 };
