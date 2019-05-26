@@ -3,7 +3,7 @@
 Stars::Stars( void ) {}
 
 Stars::Stars( t_vector const &coord ) : _coordinates( coord ) {
-	std::cout << "Stars has been created" << std::endl;
+	// std::cout << "Stars has been created" << std::endl;
 	return ;
 }
 
