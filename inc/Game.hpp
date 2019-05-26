@@ -30,6 +30,7 @@ public:
 
 	void	setTime(int time);
 	int		getTime(void) const;
+	int		getScore(void) const;
 
 	void	init( void );
 	void	push( AShips * const & );
@@ -51,6 +52,7 @@ protected:
 	t_vector	_wSize;
 	int			_time;
 	t_stars*	_stars;
+	int 		_score;
 
 
 private:

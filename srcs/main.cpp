@@ -15,8 +15,8 @@ int	main( void ) {
 	WINDOW *screen;
 	WINDOW *win;
 	win = NULL;
-	screen = newwin(1, COLS, LINES - 1, 0);
-	win = newwin(LINES - 1, COLS, 0, 0);
+	screen = newwin(3, COLS, LINES - 1, 0);
+	win = newwin(LINES - 3, COLS, 0, 0);
 	keypad(win, TRUE);
 	nodelay(win, TRUE);
 	refresh();
@@ -33,7 +33,8 @@ int	main( void ) {
 		game.voyage();
 		game.display();
 
-		score << "Score = " << game.getTime();
+		score << "Score = " << game.getScore();
+		score << " Time = " << game.getTime();
 		mvwprintw(screen, 0, (COLS / 2) - score.str().size() / 2, score.str().c_str());
 		wrefresh(win);  // refresh win in order to display new messages
 		wrefresh(screen);  // refresh score in order to display new messages

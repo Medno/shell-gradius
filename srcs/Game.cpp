@@ -2,7 +2,7 @@
 
 Game::Game( void ) : _ships( NULL ), _count(0) {}
 
-Game::Game( WINDOW * const & win, t_vector const & size ) : _ships( NULL ), _count(0), _win(win), _wSize(size) {}
+Game::Game( WINDOW * const & win, t_vector const & size ) : _ships( NULL ), _count(0), _win(win), _wSize(size), _score(0) {}
 
 Game::~Game( void ) {
 	t_ships*	tmp = this->_ships;
@@ -35,6 +35,10 @@ void		Game::setTime(int time)
 int			Game::getTime(void) const
 {
 	return this->_time;
+}
+int			Game::getScore(void) const
+{
+	return this->_score;
 }
 
 int		Game::_moveEnemies( AShips* const & ship ) {
@@ -248,8 +252,8 @@ void	Game::push2( Stars * const & star ) {
 	return ;
 }
 void	Game::voyage(void) {
-	int 			rand_height = std::rand() % (this->_wSize.y -2) + 1;
-	t_vector	right = {this->_wSize.x - 1, rand_height }; //add random
+	int 			rand_height = std::rand() % (this->_wSize.y) + 3;
+	t_vector	right = {this->_wSize.x - 1, rand_height -1}; //add random
 	this->push2(new Stars( right ));
 }
 void	Game::pop2( Stars * const & star ) {
