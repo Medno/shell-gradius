@@ -6,7 +6,7 @@
 #    By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/08 14:57:58 by pchadeni          #+#    #+#              #
-#    Updated: 2019/05/25 18:54:16 by pchadeni         ###   ########.fr        #
+#    Updated: 2019/05/26 09:24:06 by pchadeni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,7 @@ HEAD =	$(INCLUDES)/AShips.hpp	\
 		$(INCLUDES)/Enemy.hpp	\
 		$(INCLUDES)/Fighter.hpp	\
 		$(INCLUDES)/Game.hpp	\
+		$(INCLUDES)/defs.hpp	\
 		$(INCLUDES)/Player.hpp
 
 #------Path------#

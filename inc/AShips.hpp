@@ -2,9 +2,10 @@
 #define ASHIPS_HPP
 
 #include <iostream>
-#include "Game.hpp"
+#include "defs.hpp"
 
-class	AShips: public Game {
+
+class	AShips {
 public:
 	virtual ~AShips( void ) {}
 	AShips( AShips const & src );

@@ -1,15 +1,14 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-//#include "Player.hpp"
-//#include "Enemy.hpp"
-
-
+#include "defs.hpp"
+#include "AShips.hpp"
 #include <iostream>
-typedef struct	s_vector {
-	int	x;
-	int	y;
-}				t_vector;
+
+typedef struct	s_ships {
+	AShips*			ship;
+	struct s_ships*	next;
+}				t_ships;
 
 class	Game {
 public:
@@ -19,11 +18,9 @@ public:
 	Game &	operator=( Game const & src );
 
 protected:
-//	Player*			player;
-//	Enemy*			enemies;
-	t_vector*	coordinates;
+	t_ships*	ships;
 
-	private:
+private:
 };
 
 #endif
