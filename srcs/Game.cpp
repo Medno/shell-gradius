@@ -109,30 +109,12 @@ int		Game::_destroyKilled( void ) {
 	if (!this->_ships)
 		return ( GAME_EXIT );
 
-	/*
 	t_ships*	enemies;
 	t_ships*	nextEnemy;
+	t_shots*	shots = AShips::getShots();
 	t_shots*	prevShot;
 	int			del = 0;
-	*/
-	t_ships*	units = this->_ships;
-	t_shots*	shots = AShips::getShots();
 
-	while (units) {
-		shots = AShips::getShots();
-		while (shots) {
-			t_vector vecTmp = units->ship->getPositions();
-			vecTmp.x -= 1;
-			if (AShips::checkShotPosition( shots, units->ship->getPositions() )
-				|| AShips::checkShotPosition( shots, vecTmp )) {
-				units = this->pop(units);
-				shots = AShips::popShot(shots);
-			}
-			shots = shots->next;
-		}
-		units = units->next;
-	}
-/*
 	while (shots) { // Check if the player is killed (first of linked list)
 		enemies =  this->_ships;
 		if (AShips::checkShotPosition( shots, enemies->ship->getPositions() )) {
@@ -168,7 +150,6 @@ int		Game::_destroyKilled( void ) {
 		else
 			del = 0;
 	}
-	*/
 	return ( GAME_EXIT );
 }
 
@@ -198,7 +179,7 @@ int		Game::update ( void ) {
 		unit = unit->next;
 	}
 	AShips::popBordersShots(this->_wSize);
-//	this->_destroyKilled();
+	this->_destroyKilled();
 	this->_spawnEnemy();
 	return ( GAME_CONTINUE );
 }
@@ -228,28 +209,8 @@ void	Game::push( AShips * const & ship ) {
 	return ;
 }
 
-t_ships*	Game::pop( t_ships * const & ship ) {
+void	Game::pop( t_ships * const & ship ) {
 	t_ships*	tmp = this->_ships;
-
-	while (tmp) {
-		if (this->_ships == ship) {
-			this->_ships = tmp->next;
-			delete tmp->ship;
-			delete tmp;
-			tmp = this->_ships;
-			break ;
-		}
-		else if (tmp->next && tmp->next->ship == ship->ship) {
-			tmp->next = tmp->next->next;
-			delete tmp->next->ship;
-			delete tmp->next;
-			break ;
-		}
-		tmp = tmp->next;
-	}
-	return tmp;
-
-	/*
 	t_ships*	toDelete;
 
 	tmp = this->_ships;
@@ -268,8 +229,8 @@ t_ships*	Game::pop( t_ships * const & ship ) {
 		delete toDelete->ship;
 		delete toDelete;
 	}
+
 	return ;
-*/
 }
 
 void		Game::_displayShots( void ) const {

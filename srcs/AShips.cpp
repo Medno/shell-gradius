@@ -62,18 +62,17 @@ bool		AShips::checkShotPosition( t_shots * const & shot, t_vector const & pos ) 
 	return false;
 }
 
-
 void		AShips::popBordersShots( t_vector const & wLimits ) {
 	t_shots*	tmp = AShips::_shots;
 
-	if (!tmp)
-		return ;
 	while (tmp) {
 		if (AShips::checkShotPosition( tmp, 1 )
 			|| AShips::checkShotPosition( tmp, wLimits.x ))
 			tmp = AShips::popShot(tmp);
-		tmp = tmp->next;
+		if (tmp)
+			tmp = tmp->next;
 	}
+	return ;
 }
 
 void		AShips::popShots( void ) {
@@ -104,23 +103,6 @@ t_shots*	AShips::popShot( t_shots * & shot ) {
 		}
 		tmp = tmp->next;
 	}
-/*
-	if (shot == tmp) {
-		tmp = tmp->next;
-		AShips::setShots(tmp);
-		delete shot;
-	}
-	else {
-		while (tmp->next) {
-			if (tmp->next == shot) {
-				tmp->next = shot->next;
-				delete shot;
-				return tmp->next;
-			}
-			tmp = tmp->next;
-		}
-	}
-	*/
 	return tmp;
 }
 

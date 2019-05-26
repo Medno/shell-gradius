@@ -27,7 +27,7 @@ public:
 
 	void	init( void );
 	void	push( AShips * const & );
-	t_ships*	pop( t_ships * const & );
+	void	pop( t_ships * const & );
 
 	void	display( void ) const;
 	int		update( void );
