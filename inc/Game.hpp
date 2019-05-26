@@ -6,6 +6,7 @@
 #include "AShips.hpp"
 #include "Player.hpp"
 #include "Fighter.hpp"
+#include "Boss.hpp"
 #include "Stars.hpp"
 #include <iostream>
 
@@ -55,6 +56,7 @@ protected:
 private:
 	int		_handlePlayer( AShips* const & );
 	int		_moveEnemies( AShips* const & );
+	int		_moveBoss( AShips* const & );
 	void	_spawnEnemy( void );
 	int		_checkPositions( void );
 };

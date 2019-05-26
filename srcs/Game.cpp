@@ -49,13 +49,39 @@ int		Game::_moveEnemies( AShips* const & ship ) {
 	return (1);
 }
 
+int		Game::_moveBoss( AShips* const & ship ) {
+	t_vector	positionsBoss;
+	t_vector	positionsPlayer = this->_ships->ship->getPositions();
+	// t_ships*	player = this->_ships;
+
+	positionsBoss = ship->getPositions();
+	if (positionsBoss.x > positionsPlayer.x + 50)
+		positionsBoss.x -= 1;
+	else if (positionsBoss.x < positionsPlayer.x + 20 &&
+		positionsBoss.x < this->_wSize.x - 1)
+		positionsBoss.x += 1;
+	if (positionsBoss.y > positionsPlayer.y)
+		positionsBoss.y -= 1;
+	else if (positionsBoss.y < positionsPlayer.y)
+		positionsBoss.y += 1;
+	if ( positionsBoss.x == 1 )
+		this->pop( ship );
+	else
+		ship->setPositions( positionsBoss );
+	return (1);
+}
+
+
 void	Game::_spawnEnemy( void ) {
-	if (!(this->_time % 3)) {
+	if (!(this->_time % 10)) {
 		t_vector	positions = {
 			this->_wSize.x - 1,
 			rand() % (this->_wSize.y - 1) + 1
 		};
-		this->push(new Fighter( positions ));
+		if ((this->_time % 300) == 120)
+			this->push(new Boss( positions ));
+		else
+			this->push(new Fighter( positions ));
 	}
 	return ;
 }
@@ -130,12 +156,14 @@ int		Game::update ( void ) {
 		}
 		univers = univers->next;
 	}
-	std::string	unitTypes[2] = {
+	std::string	unitTypes[3] = {
 		"Player",
+		"Boss",
 		"Fighter"
 	};
-	int		(Game::*f[2])( AShips* const & ) = {
+	int		(Game::*f[3])( AShips* const & ) = {
 		&Game::_handlePlayer,
+		&Game::_moveBoss,
 		&Game::_moveEnemies
 	};
 	int			len = sizeof(unitTypes) / sizeof(unitTypes[0]);
@@ -262,6 +290,8 @@ void		Game::display( void ) const {
 //		std::cout << *(unit->ship);
 		if (unit->ship->getType() == "Player")
 			body = "X";
+		else if (unit->ship->getType() == "Boss")
+			body = "8";
 		else
 			body = "<";
 		position = unit->ship->getPositions();
