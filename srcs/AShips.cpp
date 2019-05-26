@@ -19,6 +19,17 @@ AShips &	AShips::operator=( AShips const & rhs ) {
 	return *this;
 }
 
+void		AShips::setCoordinates( t_vector const & coordinates ) {
+	this->_coordinates = coordinates;
+	return ;
+}
+
 t_vector	AShips::getCoordinates( void ) const {
 	return this->_coordinates;
+}
+
+std::ostream & operator<<( std::ostream & o, AShips const & rhs ) {
+	t_vector	coordinates;
+	o << "Ship at coordinates : y: " << coordinates.y << ", x: " << coordinates.x << std::endl;
+	return o;
 }

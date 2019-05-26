@@ -4,7 +4,6 @@
 #include <iostream>
 #include "defs.hpp"
 
-
 class	AShips {
 public:
 	virtual ~AShips( void ) {}
@@ -13,6 +12,7 @@ public:
 
 	AShips( t_vector const & );
 
+	void			setCoordinates( void );
 	t_vector		getCoordinates( void ) const;
 	virtual void	fire( void ) = 0;
 
@@ -21,5 +21,7 @@ protected:
 	t_vector	_coordinates;
 
 };
+
+std::ostream & operator<<( std::ostream & o, AShips const & rhs );
 
 #endif

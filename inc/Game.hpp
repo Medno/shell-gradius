@@ -1,7 +1,6 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include "defs.hpp"
 #include "AShips.hpp"
 #include <iostream>
 
@@ -17,8 +16,13 @@ public:
 	Game( Game const & src );
 	Game &	operator=( Game const & src );
 
+	void	updateCoordinates( void );
+
+	t_vector*	getShips( void ) const;
+
 protected:
 	t_ships*	ships;
+	int			count;
 
 private:
 };
