@@ -15,6 +15,10 @@ public:
 	~Game( void );
 	Game( Game const & src );
 	Game &	operator=( Game const & src );
+	void	setTime(int time);
+	int		getTime(void) const;
+
+
 
 	void	updateCoordinates( void );
 
@@ -22,7 +26,8 @@ public:
 
 protected:
 	t_ships*	ships;
-	int			count;
+	int				count;
+	int				_time;
 
 private:
 };

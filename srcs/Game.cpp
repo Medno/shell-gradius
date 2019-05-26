@@ -24,6 +24,16 @@ Game &	Game::operator=( Game const & rhs ) {
 	return *this;
 }
 
+void		Game::setTime(int time)
+{
+	this->_time = time;
+	return ;
+}
+int			Game::getTime(void) const
+{
+	return this->_time;
+}
+
 void	Game::updateCoordinates ( void ) {}
 
 t_vector*	Game::getShips( void ) const {
