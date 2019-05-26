@@ -4,6 +4,8 @@
 #include <sstream>
 #include <ncurses.h>
 
+#include "Game.hpp"
+
 #define REDIMENSION 410
 
 int	main( void ) {
@@ -13,8 +15,8 @@ int	main( void ) {
 
 	WINDOW *screen;
 	WINDOW *win;
-
-	int	n = 0;
+	Game game;
+	game.setTime(0);
 	while(1) {
 		std::stringstream	score;
 		clear();
@@ -22,11 +24,11 @@ int	main( void ) {
 		win = newwin(LINES - 1, COLS, 0, 0);
 		refresh();
 		box(win, ACS_VLINE, ACS_HLINE); // 2nd param : L-R border, 3rd param : U-D
-		score << "Score = " << n;
+		score << "Score = " << game.getTime();
 		mvwprintw(screen, 0, (COLS / 2) - score.str().size() / 2, score.str().c_str());
 		wrefresh(win);  // refresh win in order to display new messages
 		wrefresh(screen);  // refresh score in order to display new messages
-		n += 1;
+		game.setTime(game.getTime() + 1);
 		usleep(100000);
 	}
 	delwin(win);

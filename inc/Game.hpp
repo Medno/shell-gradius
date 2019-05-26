@@ -16,9 +16,14 @@ public:
 	~Game( void );
 	Game( Game const & src );
 	Game &	operator=( Game const & src );
+	void	setTime(int time);
+	int		getTime(void) const;
+
+
 
 protected:
 	t_ships*	ships;
+	int			_time;
 
 private:
 };
