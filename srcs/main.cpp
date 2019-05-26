@@ -25,7 +25,7 @@ int	main( void ) {
 	Game game(win, size);
 	game.setTime(0);
 	game.init();
-	while(1) {
+	while(game.update()) {
 		std::stringstream	score;
 		clear();
 		wclear(win);
@@ -39,12 +39,28 @@ int	main( void ) {
 		wrefresh(screen);  // refresh score in order to display new messages
 
 		game.setTime(game.getTime() + 1);
-		if (!game.update())
-			break;
+		// if (!game.update())
+		// 	break;
 		usleep(100000);
 	}
 	delwin(win);
 	delwin(screen);
+	initscr();
+	if (LINES > 10 && COLS > 20)
+	{
+		printw("  ___   __   _  _  ____\n");
+		printw(" / __) / _\\ ( \\/ )(  __)\n");
+		printw("( (_ \\/    \\/ \\/ \\ ) _) \n");
+		printw(" \\___/\\_/\\_/\\_)(_/(____)\n");
+		printw("  __   _  _  ____  ____ \n");
+		printw(" /  \\ / )( \\(  __)(  _ \\ \n");
+		printw("(  O )\\ \\/ / ) _)  )   /\n");
+		printw(" \\__/  \\__/ (____)(__\\_)\n");
+	}
+	else
+		printw("Game Over");
+	refresh(); 
+	getch();
 	endwin();
 	return (0);
 }
