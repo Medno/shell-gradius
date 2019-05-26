@@ -16,12 +16,14 @@ int	main( void ) {
 	WINDOW *win;
 	win = NULL;
 	screen = newwin(3, COLS, LINES - 1, 0);
-	win = newwin(LINES - 3, COLS, 0, 0);
+
+	t_vector	wSize = { COLS, LINES - 3 };
+	win = newwin(wSize.y, wSize.x, 0, 0);
 	keypad(win, TRUE);
 	nodelay(win, TRUE);
 	refresh();
 
-	t_vector	size = { COLS - 1, LINES - 2 };
+	t_vector	size = { wSize.x - 1, wSize.y - 1 };
 	Game game(win, size);
 	game.setTime(0);
 	game.init();

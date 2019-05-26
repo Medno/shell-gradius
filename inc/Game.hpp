@@ -14,6 +14,7 @@ typedef struct	s_ships {
 	AShips*			ship;
 	struct s_ships*	next;
 }				t_ships;
+
 typedef struct	s_stars {
 	Stars*			star;
 	struct s_stars*	next;

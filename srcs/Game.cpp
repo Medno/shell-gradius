@@ -2,7 +2,8 @@
 
 Game::Game( void ) : _ships( NULL ), _count(0) {}
 
-Game::Game( WINDOW * const & win, t_vector const & size ) : _ships( NULL ), _count(0), _win(win), _wSize(size), _score(0) {}
+Game::Game( WINDOW * const & win, t_vector const & size )
+	: _ships( NULL ), _count(0), _win(win), _wSize(size), _score(0) {}
 
 Game::~Game( void ) {
 	t_ships*	tmp = this->_ships;
@@ -45,7 +46,6 @@ int		Game::_moveEnemies( t_ships* const & unit ) {
 	t_vector	positions;
 	AShips*	const &	ship = unit->ship;
 
-//	this->moveShot( ship->getShots() );
 	positions = ship->getPositions();
 	positions.x -= 1;
 	if ( positions.x == 1 )
@@ -139,7 +139,7 @@ int		Game::_checkPositions( void ) {
 t_stars	*clean(t_stars *univers)
 {
 	if (univers == NULL)
-	return NULL;
+		return NULL;
 	else if(univers->star->getCoordinates().x < 1 && univers->next != NULL)
 	{
 		//   	t_stars *tmp = univers;
@@ -205,8 +205,9 @@ int		Game::update ( void ) {
 		return ( GAME_EXIT );
 	t_stars*	univers = clean(this->_stars);
 	t_vector	positions;
+
 	while ( univers ) {
-		if (univers->star->getCoordinates().x > 0) {
+		if (univers->star->getCoordinates().x > 1) {
 			positions = univers->star->getCoordinates();
 			positions.x -= 1;
 			univers->star->setCoordinates( positions );
@@ -318,11 +319,13 @@ void	Game::push2( Stars * const & star ) {
 	this->_count += 1;
 	return ;
 }
+
 void	Game::voyage(void) {
-	int 			rand_height = std::rand() % (this->_wSize.y) + 3;
-	t_vector	right = {this->_wSize.x - 1, rand_height -1}; //add random
+	int 		rand_height = std::rand() % (this->_wSize.y - 1) + 1;
+	t_vector	right = {this->_wSize.x - 1, rand_height }; //add random
 	this->push2(new Stars( right ));
 }
+
 void	Game::pop2( Stars * const & star ) {
 	t_stars*	tmp;
 	t_stars*	toDelete;
@@ -359,7 +362,6 @@ void		Game::display( void ) const {
 	}
 	this->_displayShots();
 	while (unit) {
-//		std::cout << *(unit->ship);
 		if (unit->ship->getType() == "Player")
 			body = "X";
 		else if (unit->ship->getType() == "Boss")
