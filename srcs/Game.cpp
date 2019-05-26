@@ -328,6 +328,7 @@ int		Game::_destroyKilled( void ) {
 				shots = AShips::popShot(shots);
 				prevShot = shots;
 				this->pop(nextEnemy);
+				this->_score += 10;
 				del = 1;
 			}
 			if (!del && enemies) {

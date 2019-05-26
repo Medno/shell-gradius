@@ -27,7 +27,7 @@ int	game( void ) {
 	Game game(win, size);
 	game.setTime(0);
 	game.init();
-	while(game.update()) {
+	while(1) {
 		std::stringstream	score;
 		clear();
 		wclear(win);
@@ -42,12 +42,13 @@ int	game( void ) {
 		wrefresh(screen);  // refresh score in order to display new messages
 
 		game.setTime(game.getTime() + 1);
-		// if (!game.update())
-		// 	break;
+		if (!game.update())
+		 	break;
 		usleep(100000);
 	}
 	delwin(win);
 	delwin(screen);
+	endwin();
 	initscr();
 	if (LINES > 10 && COLS > 20)
 	{
