@@ -20,3 +20,7 @@ Fighter &	Fighter::operator=( Fighter const & ) {
 void	Fighter::fire( void ) {
 //	std::cout << "* piou piou *" << std::endl;
 }
+
+AShips*	Fighter::clone( void ) const {
+	return new Fighter(*this);
+}

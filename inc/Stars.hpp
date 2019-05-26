@@ -2,24 +2,21 @@
 #define STARS_HPP
 
 #include <iostream>
+#include "AElement.hpp"
 #include "defs.hpp"
-#include <vector>
 
-class	Stars
-{
+class	Stars: public AElement {
 	public:
-		virtual ~Stars( void ) {}
+		~Stars( void );
 		Stars( Stars const &src );
-		Stars &	operator=( Stars const &src );
+		Stars &	operator=( Stars const & );
+
 		Stars( t_vector const &coord );
 
-		t_vector		getCoordinates( void ) const;
-		void			setCoordinates( t_vector const &coord);
+		virtual AElement* clone( void ) const;
 
 	protected:
 		Stars( void );
-		t_vector	_coordinates;
-
 };
 
 #endif

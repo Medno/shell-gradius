@@ -1,12 +1,13 @@
 #include "Game.hpp"
 
-Game::Game( void ) : _ships( NULL ), _count(0) {}
+Game::Game( void ) {}
 
 Game::Game( WINDOW * const & win, t_vector const & size )
-	: _ships( NULL ), _count(0), _win(win), _wSize(size), _score(0) {}
+	: _ships( NULL ), _win(win), _wSize(size), _score(0) {}
 
 Game::~Game( void ) {
 	t_ships*	tmp = this->_ships;
+	t_stars*	stars;
 
 	if (tmp) {
 		this->_ships = this->_ships->next;
@@ -14,83 +15,192 @@ Game::~Game( void ) {
 		delete tmp;
 		tmp = this->_ships;
 	}
+	stars = this->_stars;
+	while (stars) {
+		this->_stars = this->_stars->next;
+		delete stars->star;
+		delete stars;
+		stars = this->_stars;
+	}
 	return ;
 }
 
 Game::Game( Game const & src ) {
-	*this = src;
+	t_ships*	ships;
+	t_stars*	stars;
+
+	this->_win = src.getWin();
+	this->_wSize = src.getWSize();
+	this->_time = src.getTime();
+	this->_score = src.getScore();
+	ships = src.getShips();
+	while (ships) {
+		this->push(ships->ship->clone());
+		ships = ships->next;
+	}
+	stars = src.getStars();
+	while (stars) {
+		this->push(stars->star->clone());
+		stars = stars->next;
+	}
 	return ;
 }
 
 Game &	Game::operator=( Game const & rhs ) {
+	t_ships*	ships;
+	t_stars*	stars;
+
 	if ( this != &rhs ) {
+		ships = this->_ships;
+		while (ships) {
+			this->_ships = this->_ships->next;
+			delete ships->ship;
+			delete ships;
+			ships = this->_ships;
+		}
+		stars = this->_stars;
+		while (stars) {
+			this->_stars = this->_stars->next;
+			delete stars->star;
+			delete stars;
+			stars = this->_stars;
+		}
+
+		this->_win = rhs.getWin();
+		this->_wSize = rhs.getWSize();
+		this->_time = rhs.getTime();
+		this->_score = rhs.getScore();
+		ships = rhs.getShips();
+		while (ships) {
+			this->push(ships->ship->clone());
+			ships = ships->next;
+		}
+		stars = rhs.getStars();
+		while (stars) {
+			this->push(stars->star->clone());
+			stars = stars->next;
+		}
 	}
 	return *this;
 }
 
-void		Game::setTime(int time)
-{
+void	Game::init( void ) {
+	t_vector	middle = { this->_wSize.x / 5, this->_wSize.y / 2 };
+	this->push(new Player( middle ));
+	return ;
+}
+
+void	Game::push( AShips * const & ship ) {
+	t_ships*	tmp = this->_ships;
+
+	if (!this->_ships) {
+		this->_ships = new t_ships;
+		this->_ships->ship = ship;
+		this->_ships->next = NULL;
+	}
+	else {
+		while (tmp && tmp->next)
+			tmp = tmp->next;
+		tmp->next = new t_ships;
+		tmp->next->ship = ship;
+		tmp->next->next = NULL;
+	}
+	return ;
+}
+void	Game::push( AElement * const & star ) {
+	t_stars*	tmp = this->_stars;
+
+	if (!this->_stars) {
+		this->_stars = new t_stars;
+		this->_stars->star = star;
+		this->_stars->next = NULL;
+	}
+	else {
+		while (tmp && tmp->next)
+			tmp = tmp->next;
+		tmp->next = new t_stars;
+		tmp->next->star = star;
+		tmp->next->next = NULL;
+	}
+	return ;
+}
+
+
+void	Game::pop( t_ships * const & ship ) {
+	t_ships*	tmp = this->_ships;
+	t_ships*	toDelete;
+
+	tmp = this->_ships;
+	if (this->_ships == ship) {
+		this->_ships = this->_ships->next;
+		delete tmp->ship;
+		delete tmp;
+	}
+	else {
+		while ( tmp && tmp->next && tmp->next != ship )
+			tmp = tmp->next;
+		if ( !tmp->next || tmp->next != ship )
+			return ;
+		toDelete = tmp->next;
+		tmp->next = toDelete->next;
+		delete toDelete->ship;
+		delete toDelete;
+	}
+
+	return ;
+}
+
+void	Game::pop( t_stars * const & star ) {
+	t_stars*	tmp = this->_stars;
+	t_stars*	toDelete;
+
+	tmp = this->_stars;
+	if (this->_stars == star) {
+		this->_stars = this->_stars->next;
+		delete tmp->star;
+		delete tmp;
+	}
+	else {
+		while ( tmp && tmp->next && tmp->next != star )
+			tmp = tmp->next;
+		if ( !tmp->next || tmp->next != star )
+			return ;
+		toDelete = tmp->next;
+		tmp->next = toDelete->next;
+		delete toDelete->star;
+		delete toDelete;
+	}
+
+	return ;
+}
+
+void		Game::setTime(int time) {
 	this->_time = time;
 	return ;
 }
-int			Game::getTime(void) const
-{
+
+int			Game::getTime(void) const {
 	return this->_time;
 }
-int			Game::getScore(void) const
-{
+
+int			Game::getScore(void) const {
 	return this->_score;
 }
 
-int		Game::_moveEnemies( t_ships* const & unit ) {
-	t_vector	positions;
-	AShips*	const &	ship = unit->ship;
-
-	positions = ship->getPositions();
-	positions.x -= 1;
-	if ( positions.x == 1 )
-		this->pop( unit );
-	else
-		ship->setPositions( positions );
-	return (1);
+WINDOW*		Game::getWin( void ) const {
+	return this->_win;
 }
 
-int		Game::_moveBoss( t_ships* const & unit ) {
-	t_vector	positionsBoss;
-	t_vector	positionsPlayer = this->_ships->ship->getPositions();
-	// t_ships*	player = this->_ships;
-	AShips*	ship = unit->ship;
-
-	positionsBoss = ship->getPositions();
-	if (positionsBoss.x > positionsPlayer.x + 50)
-		positionsBoss.x -= 1;
-	else if (positionsBoss.x < positionsPlayer.x + 20 &&
-		positionsBoss.x < this->_wSize.x - 1)
-		positionsBoss.x += 1;
-	if (positionsBoss.y > positionsPlayer.y)
-		positionsBoss.y -= 1;
-	else if (positionsBoss.y < positionsPlayer.y)
-		positionsBoss.y += 1;
-	if ( positionsBoss.x == 1 )
-		this->pop( unit );
-	else
-		ship->setPositions( positionsBoss );
-	return (1);
+t_vector	Game::getWSize( void ) const {
+	return this->_wSize;
 }
 
+t_stars*	Game::getStars( void ) const {
+	return this->_stars;
+}
 
-void	Game::_spawnEnemy( void ) {
-	if (!(this->_time % 10)) {
-		t_vector	positions = {
-			this->_wSize.x - 1,
-			rand() % (this->_wSize.y - 1) + 1
-		};
-		if ((this->_time % 300) == 120)
-			this->push(new Boss( positions ));
-		else
-			this->push(new Fighter( positions ));
-	}
-	return ;
+t_ships*	Game::getShips( void ) const {
+	return this->_ships;
 }
 
 int		Game::_handlePlayer( t_ships* const & unit ) {
@@ -136,21 +246,56 @@ int		Game::_checkPositions( void ) {
 	return ( GAME_CONTINUE );
 }
 
-t_stars	*clean(t_stars *univers)
-{
-	if (univers == NULL)
-		return NULL;
-	else if(univers->star->getCoordinates().x < 1 && univers->next != NULL)
-	{
-		//   	t_stars *tmp = univers;
-		// univers = univers->next;
-		// delete tmp->star;
-		// delete tmp;
-		return univers;
-	}
+int		Game::_moveEnemies( t_ships* const & unit ) {
+	t_vector	positions;
+	AShips*	const &	ship = unit->ship;
+
+	positions = ship->getPositions();
+	positions.x -= 1;
+	if ( positions.x == 1 )
+		this->pop( unit );
 	else
-	return univers;
+		ship->setPositions( positions );
+	return (1);
 }
+
+int		Game::_moveBoss( t_ships* const & unit ) {
+	t_vector	positionsBoss;
+	t_vector	positionsPlayer = this->_ships->ship->getPositions();
+	AShips*	ship = unit->ship;
+
+	positionsBoss = ship->getPositions();
+	if (positionsBoss.x > positionsPlayer.x + 50)
+		positionsBoss.x -= 1;
+	else if (positionsBoss.x < positionsPlayer.x + 20 &&
+		positionsBoss.x < this->_wSize.x - 1)
+		positionsBoss.x += 1;
+	if (positionsBoss.y > positionsPlayer.y)
+		positionsBoss.y -= 1;
+	else if (positionsBoss.y < positionsPlayer.y)
+		positionsBoss.y += 1;
+	if ( positionsBoss.x == 1 )
+		this->pop( unit );
+	else
+		ship->setPositions( positionsBoss );
+	return (1);
+}
+
+
+void	Game::_spawnEnemy( void ) {
+	if (!(this->_time % 10)) {
+		t_vector	positions = {
+			this->_wSize.x - 1,
+			rand() % (this->_wSize.y - 1) + 1
+		};
+		if ((this->_time % 300) == 120)
+			this->push(new Boss( positions ));
+		else
+			this->push(new Fighter( positions ));
+	}
+	return ;
+}
+
 
 int		Game::_destroyKilled( void ) {
 	if (!this->_ships)
@@ -203,14 +348,17 @@ int		Game::_destroyKilled( void ) {
 int		Game::update ( void ) {
 	if (this->_checkPositions() == GAME_EXIT)
 		return ( GAME_EXIT );
-	t_stars*	univers = clean(this->_stars);
+	t_stars*	univers = this->_stars;
 	t_vector	positions;
 
 	while ( univers ) {
-		if (univers->star->getCoordinates().x > 1) {
-			positions = univers->star->getCoordinates();
+		if (univers->star->getPositions().x > 1) {
+			positions = univers->star->getPositions();
 			positions.x -= 1;
-			univers->star->setCoordinates( positions );
+			if (positions.x == 1)
+				this->pop(univers);
+			else
+				univers->star->setPositions( positions );
 		}
 		univers = univers->next;
 	}
@@ -242,55 +390,6 @@ int		Game::update ( void ) {
 	return ( GAME_CONTINUE );
 }
 
-void	Game::init( void ) {
-	t_vector	middle = { this->_wSize.x / 5, this->_wSize.y / 2 };
-	this->push(new Player( middle ));
-	return ;
-}
-
-void	Game::push( AShips * const & ship ) {
-	t_ships*	tmp = this->_ships;
-
-	if (!this->_ships) {
-		this->_ships = new t_ships;
-		this->_ships->ship = ship;
-		this->_ships->next = NULL;
-	}
-	else {
-		while (tmp && tmp->next)
-			tmp = tmp->next;
-		tmp->next = new t_ships;
-		tmp->next->ship = ship;
-		tmp->next->next = NULL;
-	}
-	this->_count += 1;
-	return ;
-}
-
-void	Game::pop( t_ships * const & ship ) {
-	t_ships*	tmp = this->_ships;
-	t_ships*	toDelete;
-
-	tmp = this->_ships;
-	if (this->_ships == ship) {
-		this->_ships = this->_ships->next;
-		delete tmp->ship;
-		delete tmp;
-	}
-	else {
-		while ( tmp && tmp->next && tmp->next != ship )
-			tmp = tmp->next;
-		if ( !tmp->next || tmp->next != ship )
-			return ;
-		toDelete = tmp->next;
-		tmp->next = toDelete->next;
-		delete toDelete->ship;
-		delete toDelete;
-	}
-
-	return ;
-}
-
 void		Game::_displayShots( void ) const {
 	t_shots	*list = AShips::getShots();
 
@@ -301,52 +400,10 @@ void		Game::_displayShots( void ) const {
 	return ;
 }
 
-void	Game::push2( Stars * const & star ) {
-	t_stars*	tmp = this->_stars;
-
-	if (!this->_stars) {
-		this->_stars = new t_stars;
-		this->_stars->star = star;
-		this->_stars->next = NULL;
-	}
-	else {
-		while (tmp && tmp->next)
-			tmp = tmp->next;
-		tmp->next = new t_stars;
-		tmp->next->star = star;
-		tmp->next->next = NULL;
-	}
-	this->_count += 1;
-	return ;
-}
-
 void	Game::voyage(void) {
 	int 		rand_height = std::rand() % (this->_wSize.y - 1) + 1;
 	t_vector	right = {this->_wSize.x - 1, rand_height }; //add random
-	this->push2(new Stars( right ));
-}
-
-void	Game::pop2( Stars * const & star ) {
-	t_stars*	tmp;
-	t_stars*	toDelete;
-
-	tmp = this->_stars;
-	if (this->_stars->star == star) {
-		this->_stars = this->_stars->next;
-		delete tmp->star;
-		delete tmp;
-	}
-	else {
-		while ( tmp && tmp->next && tmp->next->star != star )
-			tmp = tmp->next;
-		if ( !tmp->next || tmp->next->star != star )
-			return ;
-		toDelete = tmp->next;
-		tmp->next = toDelete->next;
-		delete toDelete->star;
-		delete toDelete;
-	}
-	return ;
+	this->push(new Stars( right ));
 }
 
 void		Game::display( void ) const {
@@ -356,7 +413,7 @@ void		Game::display( void ) const {
 	t_stars*	univers = this->_stars;
 
 	while (univers) {
-		position = univers->star->getCoordinates();
+		position = univers->star->getPositions();
 		mvwprintw(this->_win, position.y, position.x, "*");
 		univers = univers->next;
 	}
@@ -373,8 +430,4 @@ void		Game::display( void ) const {
 		unit = unit->next;
 	}
 	return ;
-}
-
-t_ships*	Game::getShips( void ) const {
-	return this->_ships;
 }

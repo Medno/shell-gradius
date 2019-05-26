@@ -7,7 +7,7 @@
 
 #define REDIMENSION 410
 
-int	main( void ) {
+int	game( void ) {
 	initscr();
 	noecho(); //Doesn't show char tapped by user
 	cbreak(); //Quit program with ctrl-C
@@ -65,5 +65,12 @@ int	main( void ) {
 	refresh(); 
 	getch();
 	endwin();
+	return (0);
+
+}
+
+int	main( void ) {
+	game();
+	while (1) std::cout << "";
 	return (0);
 }

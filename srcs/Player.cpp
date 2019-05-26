@@ -24,6 +24,10 @@ Player::Player( t_vector const & coordinates ) : AShips( "Player", coordinates )
 	return ;
 }
 
+AShips*	Player::clone( void ) const {
+	return new Player(*this);
+}
+
 void	Player::fire( void ) {
 	t_shots*	shot = AShips::_shots;
 	t_vector	positions = this->getPositions();

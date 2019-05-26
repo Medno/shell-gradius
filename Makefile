@@ -6,7 +6,7 @@
 #    By: pchadeni <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/08 14:57:58 by pchadeni          #+#    #+#              #
-#    Updated: 2019/05/26 14:45:44 by pchadeni         ###   ########.fr        #
+#    Updated: 2019/05/26 22:26:35 by pchadeni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ SRCS = main.cpp		\
 	   Game.cpp		\
 	   Player.cpp	\
 	   Boss.cpp	\
+	   AElement.cpp	\
 	   Stars.cpp
 
 OBJ += $(addprefix ./$(OBJ_PATH)/, $(SRCS:.cpp=.o))
@@ -40,6 +41,7 @@ HEAD =	$(INCLUDES)/AShips.hpp	\
 		$(INCLUDES)/defs.hpp	\
 		$(INCLUDES)/Player.hpp	\
 		$(INCLUDES)/Boss.hpp	\
+		$(INCLUDES)/AElement.hpp	\
 		$(INCLUDES)/Stars.hpp
 
 #------Path------#

@@ -16,39 +16,39 @@ typedef struct	s_ships {
 }				t_ships;
 
 typedef struct	s_stars {
-	Stars*			star;
+	AElement*		star;
 	struct s_stars*	next;
 }				t_stars;
 
 class	Game {
 public:
-	Game( void );
 	~Game( void );
 	Game( Game const & src );
 	Game &	operator=( Game const & src );
 
 	Game( WINDOW* const &, t_vector const & );
 
-	void	setTime(int time);
-	int		getTime(void) const;
-	int		getScore(void) const;
-
 	void	init( void );
 	void	push( AShips * const & );
+	void	push( AElement * const & );
 	void	pop( t_ships * const & );
+	void	pop( t_stars * const & );
 
-	void 	push2( Stars * const & );
-	void	pop2( Stars * const & );
 	void	voyage( void );
 
 	void	display( void ) const;
 	int		update( void );
 
+	void	setTime(int time);
+	int		getTime(void) const;
+	int		getScore(void) const;
+	t_stars*	getStars( void ) const;
 	t_ships*	getShips( void ) const;
+	WINDOW*		getWin( void ) const;
+	t_vector	getWSize( void ) const;
 
 protected:
 	t_ships*	_ships;
-	int			_count;
 	WINDOW*		_win;
 	t_vector	_wSize;
 	int			_time;
@@ -57,6 +57,7 @@ protected:
 
 
 private:
+	Game( void );
 	int		_handlePlayer( t_ships* const & );
 	int		_moveEnemies( t_ships* const & );
 	int		_moveBoss( t_ships* const & );

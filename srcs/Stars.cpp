@@ -1,8 +1,9 @@
 #include "Stars.hpp"
 
 Stars::Stars( void ) {}
+Stars::~Stars( void ) {}
 
-Stars::Stars( t_vector const &coord ) : _coordinates( coord ) {
+Stars::Stars( t_vector const &coord ) : AElement( coord ) {
 	// std::cout << "Stars has been created" << std::endl;
 	return ;
 }
@@ -12,17 +13,10 @@ Stars::Stars( Stars const & src ) {
 	return ;
 }
 
-Stars &	Stars::operator=( Stars const & rhs ) {
-	if ( this != &rhs ) {
-		this->_coordinates = rhs.getCoordinates();
-	}
+Stars &	Stars::operator=( Stars const & ) {
 	return *this;
 }
 
-void		Stars::setCoordinates( t_vector const &coord ) {
-	this->_coordinates = coord;
-	return ;
-}
-t_vector	Stars::getCoordinates( void ) const {
-	return this->_coordinates;
+AElement*	Stars::clone( void ) const {
+	return new Stars(*this);
 }

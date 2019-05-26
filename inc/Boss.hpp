@@ -5,7 +5,7 @@
 #include <iostream>
 
 /*
- * Basic ship: weak, small
+ * Intelligent ship: come to you
 */ 
 
 class Boss: public Enemy {
@@ -14,6 +14,7 @@ public:
 	Boss( Boss const & src );
 	Boss &	operator=( Boss const & );
 
+	virtual AShips*	clone( void ) const;
 	Boss( t_vector const & );
 
 	void	fire( void );
