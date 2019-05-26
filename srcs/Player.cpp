@@ -1,7 +1,7 @@
 #include "Player.hpp"
 
 Player::Player( void ) {
-	std::cout << "Welcome aboard, Captain." << std::endl;
+//	std::cout << "Welcome aboard, Captain." << std::endl;
 	return ;
 }
 
@@ -16,6 +16,12 @@ Player::Player( Player const & src ) {
 
 Player &	Player::operator=( Player const & ) {
 	return *this;
+}
+
+
+Player::Player( t_vector const & coordinates ) : AShips( "Player", coordinates ) {
+//	std::cout << "Welcome aboard, Captain middle." << std::endl;
+	return ;
 }
 
 void	Player::fire( void ) {

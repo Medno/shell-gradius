@@ -1,6 +1,6 @@
 #include "Fighter.hpp"
 
-Fighter::Fighter( void ) : Enemy( "Fighter" ) {
+Fighter::Fighter( t_vector const & positions ) : Enemy( "Fighter", positions ) {
 	std::cout << "Fighter, waiting for command" << std::endl;
 }
 

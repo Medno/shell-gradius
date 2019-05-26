@@ -1,7 +1,10 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
+#include <ncurses.h>
+#include "defs.hpp"
 #include "AShips.hpp"
+#include "Player.hpp"
 #include <iostream>
 
 typedef struct	s_ships {
@@ -15,19 +18,27 @@ public:
 	~Game( void );
 	Game( Game const & src );
 	Game &	operator=( Game const & src );
+
+	Game( WINDOW* const &, t_vector const & );
+
 	void	setTime(int time);
 	int		getTime(void) const;
 
+	void	init( void );
+	void	push( AShips * const & );
+	void	pop( AShips * const & );
 
+	void	display( void ) const;
+	void	update( void );
 
-	void	updateCoordinates( void );
-
-	t_vector*	getShips( void ) const;
+	t_ships*	getShips( void ) const;
 
 protected:
-	t_ships*	ships;
-	int				count;
-	int				_time;
+	t_ships*	_ships;
+	int			_count;
+	WINDOW*		_win;
+	t_vector	_wSize;
+	int			_time;
 
 private:
 };

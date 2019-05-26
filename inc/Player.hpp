@@ -10,6 +10,7 @@ public:
 	Player( Player const & src );
 	Player &	operator=( Player const & );
 
+	Player( t_vector const & );
 	void	fire( void );
 
 private:

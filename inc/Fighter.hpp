@@ -10,14 +10,17 @@
 
 class Fighter: public Enemy {
 public:
-	Fighter( void );
 	~Fighter( void );
 	Fighter( Fighter const & src );
 	Fighter &	operator=( Fighter const & );
 
+	Fighter( t_vector const & );
+
 	void	fire( void );
 
 private:
+	Fighter( void );
+
 };
 
 #endif

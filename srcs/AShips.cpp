@@ -2,8 +2,8 @@
 
 AShips::AShips( void ) {}
 
-AShips::AShips( t_vector const & coord ) : _coordinates( coord ) {
-	std::cout << "AShips has been created" << std::endl;
+AShips::AShips( std::string const & type, t_vector const & coord ) : _type(type), _positions( coord ) {
+//	std::cout << "AShips has been created" << std::endl;
 	return ;
 }
 
@@ -14,22 +14,26 @@ AShips::AShips( AShips const & src ) {
 
 AShips &	AShips::operator=( AShips const & rhs ) {
 	if ( this != &rhs ) {
-		this->_coordinates = rhs.getCoordinates();
+		this->_positions = rhs.getPositions();
 	}
 	return *this;
 }
 
-void		AShips::setCoordinates( t_vector const & coordinates ) {
-	this->_coordinates = coordinates;
+void		AShips::setPositions( t_vector const & positions ) {
+	this->_positions = positions;
 	return ;
 }
 
-t_vector	AShips::getCoordinates( void ) const {
-	return this->_coordinates;
+t_vector	AShips::getPositions( void ) const {
+	return this->_positions;
+}
+
+std::string	AShips::getType( void ) const {
+	return this->_type;
 }
 
 std::ostream & operator<<( std::ostream & o, AShips const & rhs ) {
-	t_vector	coordinates;
-	o << "Ship at coordinates : y: " << coordinates.y << ", x: " << coordinates.x << std::endl;
+	t_vector	positions = rhs.getPositions();
+	o << rhs.getType() << " at positions : y: " << positions.y << ", x: " << positions.x << std::endl;
 	return o;
 }

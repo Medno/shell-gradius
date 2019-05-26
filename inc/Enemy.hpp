@@ -10,7 +10,7 @@ public:
 	Enemy( Enemy const & src);
 	Enemy &	operator=( Enemy const & rhs );
 
-	Enemy( std::string const & );
+	Enemy( std::string const &, t_vector const & );
 
 	virtual void	fire( void ) = 0;
 	void	spawn( void );
@@ -19,7 +19,6 @@ protected:
 	Enemy( void );		// Create a random type enemy ?
 
 private:
-	std::string	_type;
 };
 
 #endif

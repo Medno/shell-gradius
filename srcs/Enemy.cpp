@@ -1,6 +1,6 @@
 #include "Enemy.hpp"
 
-Enemy::Enemy( std::string const & type ) : _type( type ) {
+Enemy::Enemy( std::string const & type, t_vector const & positions ) : AShips( type, positions ) {
 	std::cout << "An enemy has been created" << std::endl;
 	return ;
 }

@@ -10,15 +10,17 @@ public:
 	AShips( AShips const & src );
 	AShips &	operator=( AShips const & src );
 
-	AShips( t_vector const & );
+	AShips( std::string const &, t_vector const & );
 
-	void			setCoordinates( void );
-	t_vector		getCoordinates( void ) const;
+	void			setPositions( t_vector const & );
+	t_vector		getPositions( void ) const;
+	std::string		getType( void ) const;
 	virtual void	fire( void ) = 0;
 
 protected:
 	AShips( void );
-	t_vector	_coordinates;
+	std::string	_type;
+	t_vector	_positions;
 
 };
 
