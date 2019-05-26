@@ -59,6 +59,8 @@ bool		AShips::checkShotPosition( t_shots * const & shot, int const & x ) {
 bool		AShips::checkShotPosition( t_shots * const & shot, t_vector const & pos ) {
 	if ( shot->positions.x == pos.x && shot->positions.y == pos.y )
 		return true;
+	else if ( shot->positions.x == pos.x && shot->positions.y == pos.y )
+		return true;
 	return false;
 }
 

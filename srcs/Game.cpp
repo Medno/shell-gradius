@@ -2,7 +2,7 @@
 
 Game::Game( void ) : _ships( NULL ), _count(0) {}
 
-Game::Game( WINDOW * const & win, t_vector const & size ) : _ships( NULL ), _count(0), _win(win), _wSize(size), _score(0) {}
+Game::Game( WINDOW * const & win, t_vector const & size ) : _ships( NULL ), _count(0), _win(win), _wSize(size), _score(0), _timer(0) {}
 
 Game::~Game( void ) {
 	t_ships*	tmp = this->_ships;
@@ -36,6 +36,14 @@ int			Game::getTime(void) const
 {
 	return this->_time;
 }
+int			Game::getSizeX(void) const
+{
+	return this->_wSize.x;
+}
+int			Game::getSizeY(void) const
+{
+	return this->_wSize.y;
+}
 int			Game::getScore(void) const
 {
 	return this->_score;
@@ -65,7 +73,7 @@ int		Game::_moveBoss( t_ships* const & unit ) {
 	if (positionsBoss.x > positionsPlayer.x + 50)
 		positionsBoss.x -= 1;
 	else if (positionsBoss.x < positionsPlayer.x + 20 &&
-		positionsBoss.x < this->_wSize.x - 1)
+		positionsBoss.x < this->_wSize.x - 6)
 		positionsBoss.x += 1;
 	if (positionsBoss.y > positionsPlayer.y)
 		positionsBoss.y -= 1;
@@ -85,9 +93,15 @@ void	Game::_spawnEnemy( void ) {
 			this->_wSize.x - 1,
 			rand() % (this->_wSize.y - 1) + 1
 		};
-		if ((this->_time % 300) == 120)
+		if ((this->_score % 20) == 0 && this->_score > 0
+			&& this->_ships->next->ship->getType() != "Boss"
+			&& this->getTime() >= this->_timer + 100)
+		{
+			this->_timer = this->getTime();
+			positions.x -= 6;
 			this->push(new Boss( positions ));
-		else
+		}
+		else if (this->_score % 20 != 0 || this->_score == 0)
 			this->push(new Fighter( positions ));
 	}
 	return ;
@@ -178,12 +192,40 @@ int		Game::_destroyKilled( void ) {
 		while (!del && shots && nextEnemy) {
 			t_vector vecTmp = nextEnemy->ship->getPositions();
 			vecTmp.x -= 1;
-			if (AShips::checkShotPosition( shots, nextEnemy->ship->getPositions() )
+			if (nextEnemy->ship->getType() == "Boss")
+			{
+				vecTmp.x += 1;
+				t_vector tmpBoss = vecTmp;
+				t_vector tmpBoss2 = vecTmp;
+				for (int x = vecTmp.x - 6; x <= vecTmp.x + 6; ++x)
+				{
+					tmpBoss.x = x;
+					tmpBoss2.x = x-1;
+					for (int y = vecTmp.y - 2; y <= vecTmp.y + 1; ++y)
+					{
+						tmpBoss.y = y;
+						tmpBoss2.y = y;
+				// 		if (AShips::checkShotPosition( shots, tmpBoss2 )
+				// 		|| AShips::checkShotPosition( shots, tmpBoss ))
+						if (AShips::checkShotPosition( shots, tmpBoss )
+						|| AShips::checkShotPosition( shots, tmpBoss2 )) 
+						{
+							// shots = AShips::popShot(shots);
+							prevShot = shots;
+							this->pop(nextEnemy);
+							del = 1;
+							this->_score += 25;
+						}
+					}
+				}
+			}
+			else if (AShips::checkShotPosition( shots, nextEnemy->ship->getPositions() )
 				|| AShips::checkShotPosition( shots, vecTmp )) {
 				shots = AShips::popShot(shots);
 				prevShot = shots;
 				this->pop(nextEnemy);
 				del = 1;
+				this->_score += 10;
 			}
 			if (!del && enemies) {
 				enemies = enemies->next;
@@ -320,7 +362,7 @@ void	Game::push2( Stars * const & star ) {
 }
 void	Game::voyage(void) {
 	int 			rand_height = std::rand() % (this->_wSize.y) + 3;
-	t_vector	right = {this->_wSize.x - 1, rand_height -1}; //add random
+	t_vector	right = {this->_wSize.x - 1, rand_height -2}; //add random
 	this->push2(new Stars( right ));
 }
 void	Game::pop2( Stars * const & star ) {
@@ -359,15 +401,18 @@ void		Game::display( void ) const {
 	}
 	this->_displayShots();
 	while (unit) {
-//		std::cout << *(unit->ship);
-		if (unit->ship->getType() == "Player")
-			body = "X";
-		else if (unit->ship->getType() == "Boss")
-			body = "8";
-		else
-			body = "<";
 		position = unit->ship->getPositions();
-		mvwprintw(this->_win, position.y, position.x, body.c_str());
+		if (unit->ship->getType() == "Player")
+			mvwprintw(this->_win, position.y, position.x, "X");
+		else if (unit->ship->getType() == "Boss")
+		{
+			mvwprintw(this->_win, position.y-2, position.x-6, "     ___");
+			mvwprintw(this->_win, position.y-1, position.x-6, " ___/   \\___");
+			mvwprintw(this->_win, position.y, position.x-6, "/   '---'   \\");
+			mvwprintw(this->_win, position.y+1, position.x-6, "'--_______--'");
+		}
+		else
+		mvwprintw(this->_win, position.y, position.x, "<");
 		unit = unit->next;
 	}
 	return ;

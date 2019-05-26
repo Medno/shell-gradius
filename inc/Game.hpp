@@ -31,6 +31,9 @@ public:
 	void	setTime(int time);
 	int		getTime(void) const;
 	int		getScore(void) const;
+	int		getSizeX(void) const;
+	int		getSizeY(void) const;
+
 
 	void	init( void );
 	void	push( AShips * const & );
@@ -53,6 +56,7 @@ protected:
 	int			_time;
 	t_stars*	_stars;
 	int 		_score;
+	int 		_timer;
 
 
 private:
