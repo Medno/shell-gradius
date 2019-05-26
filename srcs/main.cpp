@@ -30,7 +30,7 @@ int	main( void ) {
 		clear();
 		wclear(win);
 		box(win, ACS_VLINE, ACS_HLINE); // 2nd param : L-R border, 3rd param : U-D
-
+		game.voyage();
 		game.display();
 
 		score << "Score = " << game.getTime();

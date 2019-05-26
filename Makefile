@@ -21,7 +21,8 @@ SRCS = main.cpp		\
 	   Enemy.cpp	\
 	   Fighter.cpp	\
 	   Game.cpp		\
-	   Player.cpp
+	   Player.cpp	\
+	   Stars.cpp
 
 OBJ += $(addprefix ./$(OBJ_PATH)/, $(SRCS:.cpp=.o))
 
@@ -36,7 +37,8 @@ HEAD =	$(INCLUDES)/AShips.hpp	\
 		$(INCLUDES)/Fighter.hpp	\
 		$(INCLUDES)/Game.hpp	\
 		$(INCLUDES)/defs.hpp	\
-		$(INCLUDES)/Player.hpp
+		$(INCLUDES)/Player.hpp	\
+		$(INCLUDES)/Stars.hpp
 
 #------Path------#
 

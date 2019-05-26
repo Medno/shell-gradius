@@ -6,12 +6,17 @@
 #include "AShips.hpp"
 #include "Player.hpp"
 #include "Fighter.hpp"
+#include "Stars.hpp"
 #include <iostream>
 
 typedef struct	s_ships {
 	AShips*			ship;
 	struct s_ships*	next;
 }				t_ships;
+typedef struct	s_stars {
+	Stars*			star;
+	struct s_stars*	next;
+}				t_stars;
 
 class	Game {
 public:
@@ -29,6 +34,10 @@ public:
 	void	push( AShips * const & );
 	void	pop( AShips * const & );
 
+	void 	push2( Stars * const & );
+	void	pop2( Stars * const & );
+	void	voyage( void );
+
 	void	display( void ) const;
 	int		update( void );
 
@@ -40,6 +49,8 @@ protected:
 	WINDOW*		_win;
 	t_vector	_wSize;
 	int			_time;
+	t_stars*	_stars;
+
 
 private:
 	int		_handlePlayer( AShips* const & );

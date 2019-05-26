@@ -100,11 +100,36 @@ int		Game::_checkPositions( void ) {
 	return ( GAME_CONTINUE );
 }
 
+t_stars	*clean(t_stars *univers)
+{
+	if (univers == NULL)
+		return NULL;
+	else if(univers->star->getCoordinates().x < 1 && univers->next != NULL)
+    {
+  //   	t_stars *tmp = univers;
+		// univers = univers->next;
+		// delete tmp->star;
+		// delete tmp;
+        return univers;
+    }
+    else
+        return univers;
+}
+
 int		Game::update ( void ) {
 
 	if (this->_checkPositions() == GAME_EXIT)
 		return ( GAME_EXIT );
-
+	t_stars*	univers = clean(this->_stars);
+	t_vector	positions;
+	while ( univers ) {
+		if (univers->star->getCoordinates().x > 0) {
+			positions = univers->star->getCoordinates();
+			positions.x -= 1;
+			univers->star->setCoordinates( positions );
+		}
+		univers = univers->next;
+	}
 	std::string	unitTypes[2] = {
 		"Player",
 		"Fighter"
@@ -176,11 +201,63 @@ void	Game::pop( AShips * const & ship ) {
 	return ;
 }
 
+void	Game::push2( Stars * const & star ) {
+	t_stars*	tmp = this->_stars;
+
+	if (!this->_stars) {
+		this->_stars = new t_stars;
+		this->_stars->star = star;
+		this->_stars->next = NULL;
+	}
+	else {
+		while (tmp && tmp->next)
+			tmp = tmp->next;
+		tmp->next = new t_stars;
+		tmp->next->star = star;
+		tmp->next->next = NULL;
+	}
+	this->_count += 1;
+	return ;
+}
+void	Game::voyage(void) {
+	int 			rand_height = std::rand() % (this->_wSize.y -2) + 1;
+	t_vector	right = {this->_wSize.x - 1, rand_height }; //add random
+	this->push2(new Stars( right ));
+}
+void	Game::pop2( Stars * const & star ) {
+	t_stars*	tmp;
+	t_stars*	toDelete;
+
+	tmp = this->_stars;
+	if (this->_stars->star == star) {
+		this->_stars = this->_stars->next;
+		delete tmp->star;
+		delete tmp;
+	}
+	else {
+		while ( tmp && tmp->next && tmp->next->star != star )
+			tmp = tmp->next;
+		if ( !tmp->next || tmp->next->star != star )
+			return ;
+		toDelete = tmp->next;
+		tmp->next = toDelete->next;
+		delete toDelete->star;
+		delete toDelete;
+	}
+	return ;
+}
+
 void		Game::display( void ) const {
 	t_ships*	unit = this->_ships;
 	t_vector	position;
 	std::string	body;
+	t_stars*	univers = this->_stars;
 
+	while (univers) {
+		position = univers->star->getCoordinates();
+		mvwprintw(this->_win, position.y, position.x, "*");
+		univers = univers->next;
+	}
 	while (unit) {
 //		std::cout << *(unit->ship);
 		if (unit->ship->getType() == "Player")
