@@ -27,7 +27,7 @@ public:
 
 	void	init( void );
 	void	push( AShips * const & );
-	void	pop( AShips * const & );
+	t_ships*	pop( t_ships * const & );
 
 	void	display( void ) const;
 	int		update( void );
@@ -42,10 +42,12 @@ protected:
 	int			_time;
 
 private:
-	int		_handlePlayer( AShips* const & );
-	int		_moveEnemies( AShips* const & );
+	int		_handlePlayer( t_ships* const & );
+	int		_moveEnemies( t_ships* const & );
 	void	_spawnEnemy( void );
 	int		_checkPositions( void );
+	void	_displayShots( void ) const;
+	int		_destroyKilled( void );
 };
 
 #endif

@@ -10,4 +10,10 @@ typedef struct	s_vector {
 	int	y;
 }				t_vector;
 
+typedef struct  s_shots {
+	bool			enemy;
+	t_vector        positions;
+	struct s_shots  *next;
+}               t_shots;
+
 #endif
