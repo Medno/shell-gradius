@@ -1,6 +1,5 @@
 #include <iostream>
 #include <unistd.h>
-
 #include <sstream>
 #include <ncurses.h>
 
@@ -31,14 +30,17 @@ int	main( void ) {
 		clear();
 		wclear(win);
 		box(win, ACS_VLINE, ACS_HLINE); // 2nd param : L-R border, 3rd param : U-D
+
 		game.display();
+
 		score << "Score = " << game.getTime();
 		mvwprintw(screen, 0, (COLS / 2) - score.str().size() / 2, score.str().c_str());
 		wrefresh(win);  // refresh win in order to display new messages
 		wrefresh(screen);  // refresh score in order to display new messages
 
 		game.setTime(game.getTime() + 1);
-		game.update();
+		if (!game.update())
+			break;
 		usleep(100000);
 	}
 	delwin(win);

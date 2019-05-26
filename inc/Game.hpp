@@ -5,6 +5,7 @@
 #include "defs.hpp"
 #include "AShips.hpp"
 #include "Player.hpp"
+#include "Fighter.hpp"
 #include <iostream>
 
 typedef struct	s_ships {
@@ -29,7 +30,7 @@ public:
 	void	pop( AShips * const & );
 
 	void	display( void ) const;
-	void	update( void );
+	int		update( void );
 
 	t_ships*	getShips( void ) const;
 
@@ -41,6 +42,10 @@ protected:
 	int			_time;
 
 private:
+	int		_handlePlayer( AShips* const & );
+	int		_moveEnemies( AShips* const & );
+	void	_spawnEnemy( void );
+	int		_checkPositions( void );
 };
 
 #endif

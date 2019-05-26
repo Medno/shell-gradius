@@ -1,11 +1,11 @@
 #include "Fighter.hpp"
 
 Fighter::Fighter( t_vector const & positions ) : Enemy( "Fighter", positions ) {
-	std::cout << "Fighter, waiting for command" << std::endl;
+//	std::cout << "Fighter, waiting for command" << std::endl;
 }
 
 Fighter::~Fighter( void ) {
-	std::cout << "Piouuuuuuuuuuupoc" << std::endl;
+//	std::cout << "Piouuuuuuuuuuupoc" << std::endl;
 }
 
 Fighter::Fighter( Fighter const & src ) {
@@ -18,5 +18,5 @@ Fighter &	Fighter::operator=( Fighter const & ) {
 }
 
 void	Fighter::fire( void ) {
-	std::cout << "* piou piou *" << std::endl;
+//	std::cout << "* piou piou *" << std::endl;
 }
