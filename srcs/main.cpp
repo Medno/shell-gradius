@@ -72,6 +72,5 @@ int	game( void ) {
 
 int	main( void ) {
 	game();
-	while (1) std::cout << "";
 	return (0);
 }
