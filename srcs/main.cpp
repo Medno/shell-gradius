@@ -21,12 +21,16 @@ int	game( void ) {
 	win = newwin(wSize.y, wSize.x, 0, 0);
 	keypad(win, TRUE);
 	nodelay(win, TRUE);
+	curs_set(FALSE);
 	refresh();
 
 	t_vector	size = { wSize.x - 1, wSize.y - 1 };
 	Game game(win, size);
 	game.setTime(0);
 	game.init();
+	start_color();
+	init_pair(1, COLOR_GREEN, COLOR_BLACK);
+	long time = 0;
 	while(1) {
 		std::stringstream	score;
 		clear();
@@ -36,20 +40,20 @@ int	game( void ) {
 		game.display();
 
 		score << "Score = " << game.getScore();
-		score << " Time = " << game.getTime();
+		score << " Time = " << time;
 		mvwprintw(screen, 0, (COLS / 2) - score.str().size() / 2, score.str().c_str());
 		wrefresh(win);  // refresh win in order to display new messages
 		wrefresh(screen);  // refresh score in order to display new messages
 
-		game.setTime(game.getTime() + 1);
 		if (!game.update())
 		 	break;
 		usleep(100000);
+		if (game.getTime() % 10 == 0)
+			time++;
+		game.setTime(game.getTime() + 1);
 	}
 	delwin(win);
 	delwin(screen);
-	endwin();
-	initscr();
 	if (LINES > 10 && COLS > 20)
 	{
 		printw("  ___   __   _  _  ____\n");

@@ -3,19 +3,18 @@
 Game::Game( void ) {}
 
 Game::Game( WINDOW * const & win, t_vector const & size )
-	: _ships( NULL ), _win(win), _wSize(size), _score(0) {}
+	: _ships( NULL ), _win(win), _wSize(size), _stars(NULL), _score(0) {}
 
 Game::~Game( void ) {
 	t_ships*	tmp = this->_ships;
-	t_stars*	stars;
 
-	if (tmp) {
+	while (tmp) {
 		this->_ships = this->_ships->next;
 		delete tmp->ship;
 		delete tmp;
 		tmp = this->_ships;
 	}
-	stars = this->_stars;
+	t_stars*	stars = this->_stars;
 	while (stars) {
 		this->_stars = this->_stars->next;
 		delete stars->star;
@@ -26,23 +25,7 @@ Game::~Game( void ) {
 }
 
 Game::Game( Game const & src ) {
-	t_ships*	ships;
-	t_stars*	stars;
-
-	this->_win = src.getWin();
-	this->_wSize = src.getWSize();
-	this->_time = src.getTime();
-	this->_score = src.getScore();
-	ships = src.getShips();
-	while (ships) {
-		this->push(ships->ship->clone());
-		ships = ships->next;
-	}
-	stars = src.getStars();
-	while (stars) {
-		this->push(stars->star->clone());
-		stars = stars->next;
-	}
+	*this = src;
 	return ;
 }
 
@@ -219,6 +202,7 @@ int		Game::_handlePlayer( t_ships* const & unit ) {
 		if ( key == KEY_RIGHT && positions.x < this->_wSize.x - 1)
 			positions.x += 1;
 		ship->setPositions( positions );
+        while (wgetch(this->_win) == key);
 	}
 	if (key == ESC_KEY)
 		return ( GAME_EXIT );
@@ -415,19 +399,24 @@ void		Game::display( void ) const {
 
 	while (univers) {
 		position = univers->star->getPositions();
-		mvwprintw(this->_win, position.y, position.x, "*");
+		mvwprintw(this->_win, position.y, position.x, ".");
 		univers = univers->next;
 	}
 	this->_displayShots();
 	while (unit) {
-		if (unit->ship->getType() == "Player")
-			body = "X";
+		if (unit->ship->getType() == "Player") {
+			wattron(this->_win, COLOR_PAIR(1));
+			body = "$";
+		}
 		else if (unit->ship->getType() == "Boss")
 			body = "8";
 		else
 			body = "<";
 		position = unit->ship->getPositions();
 		mvwprintw(this->_win, position.y, position.x, body.c_str());
+
+		if (unit->ship->getType() == "Player")
+			wattroff(this->_win, COLOR_PAIR(1));
 		unit = unit->next;
 	}
 	return ;
