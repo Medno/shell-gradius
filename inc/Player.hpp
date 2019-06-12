@@ -10,10 +10,10 @@ public:
 	Player( Player const & src );
 	Player &	operator=( Player const & );
 
-	virtual AShips*	clone( void ) const;
+	virtual AElement*	clone( void ) const;
 	Player( t_vector const & );
 	virtual void	fire( void );
-//	virtual void	moveShots( void );
+	virtual int		update( void );
 
 private:
 };

@@ -24,7 +24,7 @@ Player::Player( t_vector const & coordinates ) : AShips( "Player", coordinates )
 	return ;
 }
 
-AShips*	Player::clone( void ) const {
+AElement*	Player::clone( void ) const {
 	return new Player(*this);
 }
 
@@ -62,3 +62,26 @@ void	Player::moveShots( void ) {
 	return ;
 }
 */
+int		Player::update( void ) {
+	int			key = wgetch(this->_win);
+	t_vector	positions;
+
+	if (key != ERR) {
+		positions = this->_positions;
+		if ( key == KEY_UP && positions.y > 1 )
+			positions.y -= 1;
+		if ( key == KEY_DOWN && positions.y < this->_wSize.y - 1)
+			positions.y += 1;
+		if ( key == KEY_LEFT && positions.x > 1)
+			positions.x -= 1;
+		if ( key == KEY_RIGHT && positions.x < this->_wSize.x - 1)
+			positions.x += 1;
+		this->setPositions( positions );
+        while (wgetch(this->_win) == key);
+	}
+	if (key == ESC_KEY)
+		return ( GAME_EXIT );
+	if (key == ' ')
+		this->fire();
+	return ( GAME_CONTINUE );
+}

@@ -14,10 +14,11 @@ public:
 	Boss( Boss const & src );
 	Boss &	operator=( Boss const & );
 
-	virtual AShips*	clone( void ) const;
 	Boss( t_vector const & );
 
 	void	fire( void );
+	virtual AElement*	clone( void ) const;
+	virtual int	update( void );
 
 private:
 	Boss( void );

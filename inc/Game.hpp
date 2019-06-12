@@ -3,12 +3,10 @@
 
 #include <ncurses.h>
 #include "defs.hpp"
-#include "AShips.hpp"
-#include "Player.hpp"
-#include "Fighter.hpp"
-#include "Boss.hpp"
-#include "Stars.hpp"
 #include <iostream>
+class AShips;
+class AElement;
+class Stars;
 
 typedef struct	s_ships {
 	AShips*			ship;
@@ -31,8 +29,8 @@ public:
 	void	init( void );
 	void	push( AShips * const & );
 	void	push( AElement * const & );
-	void	pop( t_ships * const & );
-	void	pop( t_stars * const & );
+	void	pop( AShips * const & );
+	void	pop( AElement * const & );
 
 	void	voyage( void );
 
@@ -54,10 +52,10 @@ protected:
 	int			_time;
 	t_stars*	_stars;
 	int 		_score;
+	Game( void );
 
 
 private:
-	Game( void );
 	int		_handlePlayer( t_ships* const & );
 	int		_moveEnemies( t_ships* const & );
 	int		_moveBoss( t_ships* const & );

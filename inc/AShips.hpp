@@ -25,7 +25,8 @@ public:
 
 	static void		popBordersShots( t_vector const & );
 
-	virtual AShips*	clone( void ) const = 0;
+	virtual AElement*	clone( void ) const = 0;
+	virtual int		update( void ) = 0;
 
 protected:
 	AShips( void );

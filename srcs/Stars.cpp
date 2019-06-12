@@ -20,3 +20,17 @@ Stars &	Stars::operator=( Stars const & ) {
 AElement*	Stars::clone( void ) const {
 	return new Stars(*this);
 }
+
+int			Stars::update( void ) {
+	t_vector	positions;
+
+	if (this->_positions.x > 1) {
+		positions = this->_positions;
+		positions.x -= 1;
+		if (positions.x == 1)
+			this->pop( this );
+		else
+			this->setPositions( positions );
+	}
+	return ( GAME_CONTINUE );
+}

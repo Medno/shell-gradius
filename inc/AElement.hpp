@@ -2,8 +2,9 @@
 #define AELEMENT_HPP
 
 #include "defs.hpp"
+#include "Game.hpp"
 
-class	AElement {
+class	AElement: public Game {
 public:
 	virtual ~AElement( void );
 	AElement( AElement const & src );
@@ -14,6 +15,7 @@ public:
 	void			setPositions( t_vector const & );
 	t_vector		getPositions( void ) const;
 	virtual AElement*	clone( void ) const = 0;
+	virtual int	update( void ) = 0;
 
 protected:
 	AElement( void );

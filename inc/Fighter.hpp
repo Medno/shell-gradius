@@ -15,7 +15,8 @@ public:
 	Fighter &	operator=( Fighter const & );
 
 	Fighter( t_vector const & );
-	virtual AShips*	clone( void ) const;
+	virtual AElement*	clone( void ) const;
+	virtual int	update( void );
 
 	void	fire( void );
 

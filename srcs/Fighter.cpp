@@ -21,6 +21,18 @@ void	Fighter::fire( void ) {
 //	std::cout << "* piou piou *" << std::endl;
 }
 
-AShips*	Fighter::clone( void ) const {
+AElement*	Fighter::clone( void ) const {
 	return new Fighter(*this);
+}
+
+int	Fighter::update( void ) {
+	t_vector	positions;
+
+	positions = this->_positions;
+	positions.x -= 1;
+	if ( positions.x == 1 )
+		this->pop( this );
+	else
+		this->setPositions( positions );
+	return ( GAME_CONTINUE );
 }
