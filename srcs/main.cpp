@@ -3,6 +3,7 @@
 #include <sstream>
 #include <ncurses.h>
 
+#include "Logger.hpp"
 #include "Game.hpp"
 
 #define REDIMENSION 410
@@ -44,7 +45,6 @@ int	game( void ) {
 		mvwprintw(screen, 0, (COLS / 2) - score.str().size() / 2, score.str().c_str());
 		wrefresh(win);  // refresh win in order to display new messages
 		wrefresh(screen);  // refresh score in order to display new messages
-
 		if (!game.update())
 		 	break;
 		usleep(100000);
@@ -75,6 +75,8 @@ int	game( void ) {
 }
 
 int	main( void ) {
+	LOG_OPEN()
 	game();
+	LOG_CLOSE()
 	return (0);
 }

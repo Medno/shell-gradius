@@ -24,7 +24,8 @@ SRCS = main.cpp		\
 	   Player.cpp	\
 	   Boss.cpp	\
 	   AElement.cpp	\
-	   Stars.cpp
+	   Stars.cpp	\
+	   Logger.cpp
 
 OBJ += $(addprefix ./$(OBJ_PATH)/, $(SRCS:.cpp=.o))
 
@@ -42,7 +43,8 @@ HEAD =	$(INCLUDES)/AShips.hpp	\
 		$(INCLUDES)/Player.hpp	\
 		$(INCLUDES)/Boss.hpp	\
 		$(INCLUDES)/AElement.hpp	\
-		$(INCLUDES)/Stars.hpp
+		$(INCLUDES)/Stars.hpp	\
+		$(INCLUDES)/Logger.hpp
 
 #------Path------#
 
@@ -75,7 +77,9 @@ fclean: clean
 	@rm -Rf $(NAME)
 	@echo "$(BOLD_GREEN)$(NAME)$(EOC) fclean $(BOLD_GREEN)✓$(EOC)"
 
-re: fclean all
+re:
+	$(MAKE) fclean
+	$(MAKE) all
 
 #------Compilation's flags------#
 
@@ -98,6 +102,9 @@ ifeq ($(SAN),yes)
 FLAGS += -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls
 endif
 
+ifneq ($(LOG),yes)
+FLAGS += -D NLOG
+endif
 #------Define colors------#
 
 BOLD_GREEN = \033[01;32m

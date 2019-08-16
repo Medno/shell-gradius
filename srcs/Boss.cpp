@@ -1,7 +1,8 @@
 #include "Boss.hpp"
 
 Boss::Boss( t_vector const & positions ) : Enemy( "Boss", positions ) {
-//	std::cout << "Fighter, waiting for command" << std::endl;
+	std::cout << "BOSS POM POM POM" << std::endl;
+	std::cout << positions.x << "-- x | y -- " << positions.y << std::endl;
 }
 
 Boss::~Boss( void ) {
@@ -27,9 +28,12 @@ void	Boss::fire( void ) {
 
 int		Boss::update( void ) {
 	t_vector	positionsBoss;
+	std::cout << "\nET LA\n";
 	t_vector	positionsPlayer = this->_ships->ship->getPositions();
 
+	std::cout << "Coucou\n";
 	positionsBoss = this->getPositions();
+	std::cout << "x " << positionsBoss.x << " y " << positionsBoss.y << std::endl;
 	if (positionsBoss.x > positionsPlayer.x + 50)
 		positionsBoss.x -= 1;
 	else if (positionsBoss.x < positionsPlayer.x + 20 &&

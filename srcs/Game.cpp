@@ -144,19 +144,26 @@ void	Game::pop( AElement * const & star ) {
 	t_stars*	toDelete;
 
 	tmp = this->_stars;
-	if (this->_stars->star == star) {
+	LOG("Poping star...")
+	if (this->_stars && this->_stars->star == star) {
+		LOG("Star founded")
 		this->_stars = this->_stars->next;
+		LOG("Star Replaced")
 		delete tmp->star;
+		LOG("Star Deleted")
 		delete tmp;
 	}
 	else {
+		LOG("Searching star...")
 		while ( tmp && tmp->next && tmp->next->star != star )
 			tmp = tmp->next;
+		LOG("Star founded")
 		if ( !tmp->next || tmp->next->star != star )
 			return ;
 		toDelete = tmp->next;
 		tmp->next = toDelete->next;
 		delete toDelete->star;
+		LOG("Star deleted")
 		delete toDelete;
 	}
 
@@ -336,15 +343,22 @@ int		Game::_destroyKilled( void ) {
 	return ( GAME_EXIT );
 }
 
-int		Game::update ( void ) {
+void	Game::updateStars( void ) {
+//TODO: Updating stars is segfaulting because pointer is lost	
+}
+
+int		Game::update( void ) {
+	LOG("Updating...")
 	if (this->_checkPositions() == GAME_EXIT)
 		return ( GAME_EXIT );
+	LOG("Check position done")
 	t_stars*	univers = this->_stars;
 
 	while ( univers ) {
 		univers->star->update();
 		univers = univers->next;
 	}
+	LOG("Update of stars done")
 	AShips::moveShots();
 	/*
 	std::string	unitTypes[3] = {
@@ -369,9 +383,12 @@ int		Game::update ( void ) {
 		//}
 		unit = unit->next;
 	}
+	LOG("Update ships done")
 	AShips::popBordersShots(this->_wSize);
 	this->_destroyKilled();
+	LOG("Destroy Killed")
 	this->_spawnEnemy();
+	LOG("End of Updating")
 	return ( GAME_CONTINUE );
 }
 

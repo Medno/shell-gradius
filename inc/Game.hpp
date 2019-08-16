@@ -2,6 +2,7 @@
 #define GAME_HPP
 
 #include <ncurses.h>
+#include "Logger.hpp"
 #include "defs.hpp"
 #include <iostream>
 class AShips;

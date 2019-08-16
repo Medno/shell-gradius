@@ -27,7 +27,7 @@ int			Stars::update( void ) {
 	if (this->_positions.x > 1) {
 		positions = this->_positions;
 		positions.x -= 1;
-		if (positions.x == 1)
+		if (positions.x == 0)
 			this->pop( this );
 		else
 			this->setPositions( positions );
