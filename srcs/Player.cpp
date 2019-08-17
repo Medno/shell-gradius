@@ -29,15 +29,15 @@ AElement*	Player::clone( void ) const {
 }
 
 void	Player::fire( void ) {
-	t_shots*	shot = AShips::_shots;
+	t_shots*	shot = AShips::shots;
 	t_vector	positions = this->getPositions();
 
-	if (!AShips::_shots) {
-		AShips::_shots = new t_shots;
-		AShips::_shots->enemy = 0;
-		AShips::_shots->positions.x = positions.x + 1;
-		AShips::_shots->positions.y = positions.y;
-		AShips::_shots->next = NULL;
+	if (!AShips::shots) {
+		AShips::shots = new t_shots;
+		AShips::shots->enemy = 0;
+		AShips::shots->positions.x = positions.x + 1;
+		AShips::shots->positions.y = positions.y;
+		AShips::shots->next = NULL;
 	}
 	else {
 		while (shot && shot->next)
@@ -63,21 +63,21 @@ void	Player::moveShots( void ) {
 }
 */
 int		Player::update( void ) {
-	int			key = wgetch(this->_win);
+	int			key = wgetch(this->win);
 	t_vector	positions;
 
 	if (key != ERR) {
-		positions = this->_positions;
+		positions = this->positions;
 		if ( key == KEY_UP && positions.y > 1 )
 			positions.y -= 1;
-		if ( key == KEY_DOWN && positions.y < this->_wSize.y - 1)
+		if ( key == KEY_DOWN && positions.y < this->wSize.y - 1)
 			positions.y += 1;
 		if ( key == KEY_LEFT && positions.x > 1)
 			positions.x -= 1;
-		if ( key == KEY_RIGHT && positions.x < this->_wSize.x - 1)
+		if ( key == KEY_RIGHT && positions.x < this->wSize.x - 1)
 			positions.x += 1;
 		this->setPositions( positions );
-        while (wgetch(this->_win) == key);
+        while (wgetch(this->win) == key);
 	}
 	if (key == ESC_KEY)
 		return ( GAME_EXIT );

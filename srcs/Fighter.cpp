@@ -28,7 +28,7 @@ AElement*	Fighter::clone( void ) const {
 int	Fighter::update( void ) {
 	t_vector	positions;
 
-	positions = this->_positions;
+	positions = this->positions;
 	positions.x -= 1;
 	if ( positions.x == 1 )
 		this->pop( this );

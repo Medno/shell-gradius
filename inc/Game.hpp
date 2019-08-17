@@ -5,10 +5,12 @@
 #include "Logger.hpp"
 #include "defs.hpp"
 #include <iostream>
+#include <vector>
 class AShips;
 class AElement;
 class Stars;
 
+/*
 typedef struct	s_ships {
 	AShips*			ship;
 	struct s_ships*	next;
@@ -18,7 +20,7 @@ typedef struct	s_stars {
 	AElement*		star;
 	struct s_stars*	next;
 }				t_stars;
-
+*/
 class	Game {
 public:
 	~Game( void );
@@ -28,10 +30,10 @@ public:
 	Game( WINDOW* const &, t_vector const & );
 
 	void	init( void );
-	void	push( AShips * const & );
-	void	push( AElement * const & );
-	void	pop( AShips * const & );
-	void	pop( AElement * const & );
+	void	push( AShips * const );
+	void	push( AElement * const );
+	void	pop( AShips * const );
+	void	pop( AElement * const );
 
 	void	voyage( void );
 
@@ -41,29 +43,31 @@ public:
 	void	setTime(int time);
 	int		getTime(void) const;
 	int		getScore(void) const;
-	t_stars*	getStars( void ) const;
-	t_ships*	getShips( void ) const;
+	std::vector<AElement *>	getStars( void ) const;
+	std::vector<AShips *>	getShips( void ) const;
 	WINDOW*		getWin( void ) const;
 	t_vector	getWSize( void ) const;
 
 protected:
-	t_ships*	_ships;
-	WINDOW*		_win;
-	t_vector	_wSize;
-	int			_time;
-	t_stars*	_stars;
-	int 		_score;
+	std::vector<AShips *>	ships;
+	std::vector<AElement *>	stars;
+	WINDOW*		win;
+	t_vector	wSize;
+	int			time;
+	int 		score;
 	Game( void );
 
 
 private:
-	int		_handlePlayer( t_ships* const & );
-	int		_moveEnemies( t_ships* const & );
-	int		_moveBoss( t_ships* const & );
-	void	_spawnEnemy( void );
-	int		_checkPositions( void );
-	void	_displayShots( void ) const;
-	int		_destroyKilled( void );
+	/*
+	int		handlePlayer( t_ships* const & );
+	int		moveEnemies( t_ships* const & );
+	int		moveBoss( t_ships* const & );
+	*/
+	void	spawnEnemy( void );
+	int		checkPositions( void );
+	void	displayShots( void ) const;
+	int		destroyKilled( void );
 };
 
 #endif

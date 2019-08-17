@@ -3,7 +3,7 @@
 AShips::AShips( void ) {}
 
 AShips::AShips( std::string const & type, t_vector const & coord )
-	: AElement( coord ), _type(type) {
+	: AElement( coord ), type(type) {
 //	std::cout << "AShips has been created" << std::endl;
 	return ;
 }
@@ -15,21 +15,21 @@ AShips::AShips( AShips const & src ) {
 
 AShips &	AShips::operator=( AShips const & rhs ) {
 	if ( this != &rhs ) {
-		this->_positions = rhs.getPositions();
+		this->positions = rhs.getPositions();
 	}
 	return *this;
 }
 
 std::string	AShips::getType( void ) const {
-	return this->_type;
+	return this->type;
 }
 
 void	AShips::setShots( t_shots * const & shot ) {
-	AShips::_shots = shot;
+	AShips::shots = shot;
 	return ;
 }
 t_shots*	AShips::getShots( void ) {
-	return AShips::_shots;
+	return AShips::shots;
 }
 
 void		AShips::moveShots( void ) {
@@ -54,7 +54,7 @@ bool		AShips::checkShotPosition( t_shots * const & shot, t_vector const & pos ) 
 }
 
 void		AShips::popBordersShots( t_vector const & wLimits ) {
-	t_shots*	tmp = AShips::_shots;
+	t_shots*	tmp = AShips::shots;
 
 	while (tmp) {
 		if (AShips::checkShotPosition( tmp, 1 )
@@ -67,24 +67,24 @@ void		AShips::popBordersShots( t_vector const & wLimits ) {
 }
 
 void		AShips::popShots( void ) {
-	t_shots*	tmp = AShips::_shots;
+	t_shots*	tmp = AShips::shots;
 
-	while (AShips::_shots) {
-		AShips::_shots = AShips::_shots->next;
+	while (AShips::shots) {
+		AShips::shots = AShips::shots->next;
 		delete tmp;
-		tmp = AShips::_shots;
+		tmp = AShips::shots;
 	}
 	return ;
 }
 
 t_shots*	AShips::popShot( t_shots * & shot ) {
-	t_shots*	tmp = AShips::_shots;
+	t_shots*	tmp = AShips::shots;
 
 	while (tmp) {
 		if (tmp == shot) {
-			AShips::_shots = tmp->next;
+			AShips::shots = tmp->next;
 			delete shot;
-			tmp = AShips::_shots;
+			tmp = AShips::shots;
 			break;
 		}
 		else if (tmp->next && tmp->next == shot) {
@@ -98,7 +98,7 @@ t_shots*	AShips::popShot( t_shots * & shot ) {
 }
 
 
-t_shots*	AShips::_shots = NULL;
+t_shots*	AShips::shots = NULL;
 
 std::ostream & operator<<( std::ostream & o, AShips const & rhs ) {
 	t_vector	positions = rhs.getPositions();

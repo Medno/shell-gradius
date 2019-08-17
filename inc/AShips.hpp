@@ -26,12 +26,11 @@ public:
 	static void		popBordersShots( t_vector const & );
 
 	virtual AElement*	clone( void ) const = 0;
-	virtual int		update( void ) = 0;
 
 protected:
 	AShips( void );
-	std::string		_type;
-	static t_shots*	_shots;
+	std::string		type;
+	static t_shots*	shots;
 private:
 };
 

@@ -15,11 +15,11 @@ public:
 	void			setPositions( t_vector const & );
 	t_vector		getPositions( void ) const;
 	virtual AElement*	clone( void ) const = 0;
-	virtual int	update( void ) = 0;
+	int	update( void );
 
 protected:
 	AElement( void );
-	t_vector	_positions;
+	t_vector	positions;
 private:
 };
 

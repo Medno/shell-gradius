@@ -19,8 +19,8 @@ Enemy::Enemy( Enemy const & src ) {
 
 Enemy &	Enemy::operator=( Enemy const & rhs ) {
 	if ( this != &rhs ) {
-		this->_type = rhs._type;
-		this->_positions = rhs._positions;
+		this->type = rhs.type;
+		this->positions = rhs.positions;
 	}
 	return *this;
 }

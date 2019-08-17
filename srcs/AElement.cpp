@@ -1,7 +1,7 @@
 #include "AElement.hpp"
 
 AElement::AElement( void ) {}
-AElement::AElement( t_vector const & pos ) : _positions(pos) {}
+AElement::AElement( t_vector const & pos ) : positions(pos) {}
 AElement::~AElement( void ) {}
 
 AElement::AElement( AElement const & src ) {
@@ -11,16 +11,25 @@ AElement::AElement( AElement const & src ) {
 
 AElement &	AElement::operator=( AElement const & rhs ) {
 	if (this != &rhs) {
-		this->_positions = rhs.getPositions();
+		this->positions = rhs.getPositions();
 	}
 	return *this;
 }
 
 t_vector	AElement::getPositions( void ) const {
-	return this->_positions;
+	return this->positions;
 }
 
 void		AElement::setPositions( t_vector const & positions ) {
-	this->_positions = positions;
+	this->positions = positions;
 	return ;
+}
+
+int	AElement::update( void ) {
+	t_vector	positions;
+
+	positions = this->positions;
+	positions.x -= 1;
+	this->setPositions( positions );
+	return ( GAME_CONTINUE );
 }

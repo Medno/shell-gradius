@@ -14,7 +14,6 @@ class	Stars: public AElement {
 		Stars( t_vector const &coord );
 
 		virtual AElement* clone( void ) const;
-		virtual int		update( void );
 
 	protected:
 		Stars( void );

@@ -29,7 +29,7 @@ void	Boss::fire( void ) {
 int		Boss::update( void ) {
 	t_vector	positionsBoss;
 	std::cout << "\nET LA\n";
-	t_vector	positionsPlayer = this->_ships->ship->getPositions();
+	t_vector	positionsPlayer = this->ships[0]->getPositions();
 
 	std::cout << "Coucou\n";
 	positionsBoss = this->getPositions();
@@ -37,7 +37,7 @@ int		Boss::update( void ) {
 	if (positionsBoss.x > positionsPlayer.x + 50)
 		positionsBoss.x -= 1;
 	else if (positionsBoss.x < positionsPlayer.x + 20 &&
-		positionsBoss.x < this->_wSize.x - 1)
+		positionsBoss.x < this->wSize.x - 1)
 		positionsBoss.x += 1;
 	if (positionsBoss.y > positionsPlayer.y)
 		positionsBoss.y -= 1;
