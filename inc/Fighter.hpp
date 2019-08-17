@@ -16,7 +16,6 @@ public:
 
 	Fighter( t_vector const & );
 	virtual AElement*	clone( void ) const;
-	virtual int	update( void );
 
 	void	fire( void );
 

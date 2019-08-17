@@ -7,10 +7,11 @@
 #include "Enemy.hpp"
 #include "Fighter.hpp"
 
+std::vector<AShips *>	Game::ships = {};
 Game::Game( void ) {}
 
 Game::Game( WINDOW * const & win, t_vector const & size )
-	: ships( {} ), stars( {} ), win(win), wSize(size), score(0) {}
+	: stars( {} ), win(win), wSize(size), score(0) {}
 
 Game::~Game( void ) {}
 
@@ -21,13 +22,11 @@ Game::Game( Game const & src ) {
 
 Game &	Game::operator=( Game const & rhs ) {
 	if ( this != &rhs ) {
-		this->ships = rhs.ships;
 		this->stars = rhs.stars;
 		this->win = rhs.getWin();
 		this->wSize = rhs.getWSize();
 		this->time = rhs.getTime();
 		this->score = rhs.getScore();
-		ships = rhs.getShips();
 	}
 	return *this;
 }
@@ -39,7 +38,7 @@ void	Game::init( void ) {
 }
 
 void	Game::push( AShips * const ship ) {
-	this->ships.push_back( ship );
+	Game::ships.push_back( ship );
 	return ;
 }
 void	Game::push( AElement * const star ) {
@@ -48,7 +47,7 @@ void	Game::push( AElement * const star ) {
 }
 
 void	Game::pop( AShips * const ship ) {
-	this->ships.erase(std::remove(this->ships.begin(), this->ships.end(), ship), this->ships.end());
+	Game::ships.erase(std::remove(Game::ships.begin(), Game::ships.end(), ship), Game::ships.end());
 	return ;
 }
 
@@ -83,8 +82,12 @@ std::vector<AElement *>	Game::getStars( void ) const {
 	return this->stars;
 }
 
-std::vector<AShips *>	Game::getShips( void ) const {
-	return this->ships;
+std::vector<AShips *> const &	Game::getShips( void ) const {
+	return Game::ships;
+}
+
+AShips *	Game::getPlayer( void ) const {
+	return Game::ships[0];
 }
 /*
 int		Game::_handlePlayer( t_ships* const & unit ) {
@@ -113,13 +116,13 @@ int		Game::_handlePlayer( t_ships* const & unit ) {
 }
 */
 int		Game::checkPositions( void ) {
-	AShips const *	player = this->ships[0];
+	AShips const *	player = Game::ships[0];
 	if ( player->getType() != "Player" )
 		return ( GAME_EXIT );
 
 	t_vector	playerPositions = player->getPositions();
 
-	for ( auto&& enemy : this->ships ) {
+	for ( auto&& enemy : Game::ships ) {
 		if ( enemy->getType() != "Player" ) {
 			t_vector	enemyPosition = enemy->getPositions();
 			if ( enemyPosition.x == playerPositions.x
@@ -130,19 +133,6 @@ int		Game::checkPositions( void ) {
 	return ( GAME_CONTINUE );
 }
 /*
-int		Game::_moveEnemies( t_ships* const & unit ) {
-	t_vector	positions;
-	AShips*	const &	ship = unit->ship;
-
-	positions = ship->getPositions();
-	positions.x -= 1;
-	if ( positions.x == 1 )
-		this->pop( unit );
-	else
-		ship->setPositions( positions );
-	return (1);
-}
-
 int		Game::_moveBoss( t_ships* const & unit ) {
 	t_vector	positionsBoss;
 	t_vector	positionsPlayer = this->_ships->ship->getPositions();
@@ -235,15 +225,14 @@ int		Game::update( void ) {
 	LOG("Check position done")
 	for ( auto&& star : this->stars )
 		star->update();
-	for ( auto&& ship : this->ships ) {
-		if (ship->getType() != "Player")
-			ship->update();
-	}
 	LOG("Update of stars done")
+	LOG(std::to_string(this->getShips().size()))
+	for ( auto&& ship : Game::ships )
+		ship->update();
 	this->stars.erase(std::remove_if(this->stars.begin(), this->stars.end(),
-                              []( AElement * star ){return !(star->getPositions().x);}), this->stars.end());
-	this->ships.erase(std::remove_if(this->ships.begin(), this->ships.end(),
-                              []( AElement * ship ){return !(ship->getPositions().x);}), this->ships.end());
+		[]( AElement * star ){return !(star->getPositions().x);}), this->stars.end());
+	Game::ships.erase(std::remove_if(Game::ships.begin(), Game::ships.end(),
+		[]( AElement * ship ){LOG(std::to_string(ship->getPositions().x)) return !(ship->getPositions().x);}), Game::ships.end());
 	/*
 	AShips::moveShots();
 	std::string	unitTypes[3] = {
@@ -259,7 +248,7 @@ int		Game::update( void ) {
 	*/
 //	int			len = sizeof(unitTypes) / sizeof(unitTypes[0]);
 	/*
-	t_ships*	unit = this->ships;
+	t_ships*	unit = Game::ships;
 
 	while ( unit ) {
 		for (int i = 0; i < len; i++) {
@@ -304,7 +293,7 @@ void		Game::display( void ) const {
 		mvwprintw(this->win, position.y, position.x, ".");
 	}
 //	this->displayShots();
-	for ( auto&& ship : this->ships ) {
+	for ( auto&& ship : Game::ships ) {
 		if (ship->getType() == "Player") {
 			wattron(this->win, COLOR_PAIR(1));
 			body = "$";

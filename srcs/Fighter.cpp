@@ -24,7 +24,7 @@ void	Fighter::fire( void ) {
 AElement*	Fighter::clone( void ) const {
 	return new Fighter(*this);
 }
-
+/*
 int	Fighter::update( void ) {
 	t_vector	positions;
 
@@ -36,3 +36,4 @@ int	Fighter::update( void ) {
 		this->setPositions( positions );
 	return ( GAME_CONTINUE );
 }
+*/

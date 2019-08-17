@@ -15,7 +15,7 @@ public:
 	void			setPositions( t_vector const & );
 	t_vector		getPositions( void ) const;
 	virtual AElement*	clone( void ) const = 0;
-	int	update( void );
+	virtual int	update( void );
 
 protected:
 	AElement( void );

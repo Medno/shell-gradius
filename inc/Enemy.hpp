@@ -13,7 +13,6 @@ public:
 	Enemy( std::string const &, t_vector const & );
 
 	virtual void	fire( void ) = 0;
-	virtual int		update( void ) = 0;
 	void	spawn( void );
 
 protected:

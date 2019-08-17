@@ -66,6 +66,7 @@ int		Player::update( void ) {
 	int			key = wgetch(this->win);
 	t_vector	positions;
 
+	LOG("Swinging")
 	if (key != ERR) {
 		positions = this->positions;
 		if ( key == KEY_UP && positions.y > 1 )

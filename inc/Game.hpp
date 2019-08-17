@@ -44,12 +44,12 @@ public:
 	int		getTime(void) const;
 	int		getScore(void) const;
 	std::vector<AElement *>	getStars( void ) const;
-	std::vector<AShips *>	getShips( void ) const;
+	std::vector<AShips *> const &	getShips( void ) const;
 	WINDOW*		getWin( void ) const;
 	t_vector	getWSize( void ) const;
+	AShips *	getPlayer( void ) const;
 
 protected:
-	std::vector<AShips *>	ships;
 	std::vector<AElement *>	stars;
 	WINDOW*		win;
 	t_vector	wSize;
@@ -68,6 +68,7 @@ private:
 	int		checkPositions( void );
 	void	displayShots( void ) const;
 	int		destroyKilled( void );
+	static std::vector<AShips *>	ships;
 };
 
 #endif
