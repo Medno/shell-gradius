@@ -6,7 +6,7 @@ Player::Player( void ) {
 }
 
 Player::~Player( void ) {
-	std::cout << "No, Captain !!! * Then, mothing *" << std::endl;
+	std::cout << "No, Captain !!! * Then, nothing *" << std::endl;
 }
 
 Player::Player( Player const & src ) {
