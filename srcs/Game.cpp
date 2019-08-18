@@ -220,6 +220,7 @@ int		Game::destroyKilled( void ) {
 
 int		Game::update( void ) {
 	LOG("Updating...")
+	this->pushStar();
 	if (this->checkPositions() == GAME_EXIT)
 		return ( GAME_EXIT );
 	LOG("Check position done")
@@ -278,7 +279,7 @@ void		Game::displayShots( void ) const {
 	return ;
 }
 
-void	Game::voyage(void) {
+void	Game::pushStar( void ) {
 	int 		rand_height = std::rand() % (this->wSize.y - 1) + 1;
 	t_vector	right = {this->wSize.x - 1, rand_height }; //add random
 	this->push(new Stars( right ));

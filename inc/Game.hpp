@@ -35,8 +35,7 @@ public:
 	void	pop( AShips * const );
 	void	pop( AElement * const );
 
-	void	voyage( void );
-
+	void	pushStar( void );
 	void	display( void ) const;
 	int		update( void );
 
