@@ -9,6 +9,8 @@
 #define REDIMENSION 410
 
 int	game( void ) {
+	srand (time(NULL));
+
 	initscr();
 	noecho(); //Doesn't show char tapped by user
 	cbreak(); //Quit program with ctrl-C
