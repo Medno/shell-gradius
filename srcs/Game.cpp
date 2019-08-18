@@ -8,11 +8,10 @@
 #include "Fighter.hpp"
 
 std::vector<AShips *>	Game::ships = {};
+WINDOW*	Game::win = NULL;
+t_vector	Game::wSize = {0, 0};
+
 Game::Game( void ) {}
-
-Game::Game( WINDOW * const & win, t_vector const & size )
-	: stars( {} ), win(win), wSize(size), score(0) {}
-
 Game::~Game( void ) {}
 
 Game::Game( Game const & src ) {
@@ -29,6 +28,11 @@ Game &	Game::operator=( Game const & rhs ) {
 		this->score = rhs.getScore();
 	}
 	return *this;
+}
+Game::Game( WINDOW * const & win, t_vector const & size )
+	: stars( {} ), score(0) {
+	Game::win = win;
+	Game::wSize = size;
 }
 
 void	Game::init( void ) {
@@ -89,32 +93,7 @@ std::vector<AShips *> const &	Game::getShips( void ) const {
 AShips *	Game::getPlayer( void ) const {
 	return Game::ships[0];
 }
-/*
-int		Game::_handlePlayer( t_ships* const & unit ) {
-	t_vector	positions;
-	int key = wgetch(this->_win);
-	AShips*	ship = unit->ship;
 
-	if (key != ERR) {
-		positions = ship->getPositions();
-		if ( key == KEY_UP && positions.y > 1 )
-			positions.y -= 1;
-		if ( key == KEY_DOWN && positions.y < this->_wSize.y - 1)
-			positions.y += 1;
-		if ( key == KEY_LEFT && positions.x > 1)
-			positions.x -= 1;
-		if ( key == KEY_RIGHT && positions.x < this->_wSize.x - 1)
-			positions.x += 1;
-		ship->setPositions( positions );
-        while (wgetch(this->_win) == key);
-	}
-	if (key == ESC_KEY)
-		return ( GAME_EXIT );
-	if (key == ' ')
-		ship->fire();
-	return ( GAME_CONTINUE );
-}
-*/
 int		Game::checkPositions( void ) {
 	AShips const *	player = Game::ships[0];
 	if ( player->getType() != "Player" )
@@ -132,29 +111,6 @@ int		Game::checkPositions( void ) {
 	}
 	return ( GAME_CONTINUE );
 }
-/*
-int		Game::_moveBoss( t_ships* const & unit ) {
-	t_vector	positionsBoss;
-	t_vector	positionsPlayer = this->_ships->ship->getPositions();
-	AShips*	ship = unit->ship;
-
-	positionsBoss = ship->getPositions();
-	if (positionsBoss.x > positionsPlayer.x + 50)
-		positionsBoss.x -= 1;
-	else if (positionsBoss.x < positionsPlayer.x + 20 &&
-		positionsBoss.x < this->_wSize.x - 1)
-		positionsBoss.x += 1;
-	if (positionsBoss.y > positionsPlayer.y)
-		positionsBoss.y -= 1;
-	else if (positionsBoss.y < positionsPlayer.y)
-		positionsBoss.y += 1;
-	if ( positionsBoss.x == 1 )
-		this->pop( unit );
-	else
-		ship->setPositions( positionsBoss );
-	return (1);
-}
-*/
 
 void	Game::spawnEnemy( void ) {
 	if (!(this->time % 10)) {
@@ -170,112 +126,59 @@ void	Game::spawnEnemy( void ) {
 	return ;
 }
 
-/*
 int		Game::destroyKilled( void ) {
-	t_ships*	enemies;
-	t_ships*	nextEnemy;
-	t_shots*	shots = AShips::getShots();
-	t_shots*	prevShot;
-	int			del = 0;
+	std::vector<AShips::shot>	shots = AShips::getShots();
+	std::vector<AShips::shot *>	shotOnEnemy;
+	std::vector<AShips **>	enemyShooted;
+	AShips const *	player = this->getPlayer();
 
-	while (shots) { // Check if the player is killed (first of linked list)
-		enemies =  this->_ships;
-		if (AShips::checkShotPosition( shots, enemies->ship->getPositions() )) {
-			AShips::popShots();
+	LOG("Destroying killed...")
+	for ( auto&& shot : shots ) { // Check if the player is killed
+		if (AShips::checkShotPosition( shot, player->getPositions() ))
 			return ( GAME_EXIT );
-		}
-		shots = shots->next;
 	}
-	shots = AShips::getShots();
-	prevShot = shots;
-	while (shots) {
-		enemies = this->_ships;
-		nextEnemy = this->_ships->next;
-		while (!del && shots && nextEnemy) {
-			t_vector vecTmp = nextEnemy->ship->getPositions();
-			vecTmp.x -= 1;
-			if (AShips::checkShotPosition( shots, nextEnemy->ship->getPositions() )
-				|| AShips::checkShotPosition( shots, vecTmp )) {
-				shots = AShips::popShot(shots);
-				prevShot = shots;
-				this->pop( nextEnemy->ship );
-				this->_score += 10;
-				del = 1;
-			}
-			if (!del && enemies) {
-				enemies = enemies->next;
-				nextEnemy = enemies->next;
+	for ( auto&& shot : shots ) {
+		for ( auto&& enemy : this->ships ) {
+			if (AShips::checkShotPosition( shot, enemy->getPositions() )) {
+				shotOnEnemy.push_back(&shot);
+				enemyShooted.push_back(&enemy);
+				this->score += 10;
 			}
 		}
-		if (!del && shots) {
-			prevShot = shots;
-			shots = shots->next;
-		}
-		else
-			del = 0;
 	}
-	return ( GAME_EXIT );
+	for ( auto&& shot : shotOnEnemy )
+		AShips::popShot(shot - &shots[0]);
+	for ( auto&& enemy : enemyShooted )
+		this->ships.erase(this->ships.begin() + (enemy - &this->ships[0]));
+	return ( GAME_CONTINUE );
 }
-*/
 
 int		Game::update( void ) {
 	LOG("Updating...")
 	this->pushStar();
+	AShips::moveShots();
+	AShips::popBordersShots( this->wSize );
+	this->destroyKilled();
 	if (this->checkPositions() == GAME_EXIT)
 		return ( GAME_EXIT );
-	LOG("Check position done")
 	for ( auto&& star : this->stars )
 		star->update();
-	LOG("Update of stars done")
-	LOG(std::to_string(this->getShips().size()))
 	for ( auto&& ship : Game::ships )
 		ship->update();
 	this->stars.erase(std::remove_if(this->stars.begin(), this->stars.end(),
 		[]( AElement * star ){return !(star->getPositions().x);}), this->stars.end());
 	Game::ships.erase(std::remove_if(Game::ships.begin(), Game::ships.end(),
-		[]( AElement * ship ){LOG(std::to_string(ship->getPositions().x)) return !(ship->getPositions().x);}), Game::ships.end());
-	/*
-	AShips::moveShots();
-	std::string	unitTypes[3] = {
-		"Player",
-		"Boss",
-		"Fighter"
-	};
-	int		(Game::*f[3])( t_ships* const & ) = {
-		&Game::_handlePlayer,
-		&Game::_moveBoss,
-		&Game::_moveEnemies
-	};
-	*/
-//	int			len = sizeof(unitTypes) / sizeof(unitTypes[0]);
-	/*
-	t_ships*	unit = Game::ships;
-
-	while ( unit ) {
-		for (int i = 0; i < len; i++) {
-			if (unit->ship->getType() == unitTypes[i]
-				&& //if (unit->ship->update() == GAME_EXIT)
-				return ( GAME_EXIT );
-		//}
-		unit = unit->next;
-	}
-	*/
-	LOG("Update ships done")
-	AShips::popBordersShots(this->wSize);
-//	this->_destroyKilled();
-//	LOG("Destroy Killed")
+		[]( AElement * ship ){return !(ship->getPositions().x);}), Game::ships.end());
+	this->destroyKilled();
 	this->spawnEnemy();
-	LOG("End of Updating")
 	return ( GAME_CONTINUE );
 }
 
 void		Game::displayShots( void ) const {
-	t_shots	*list = AShips::getShots();
+	std::vector<AShips::shot>	list = AShips::getShots();
 
-	while (list) {
-		mvwprintw(this->win, list->positions.y, list->positions.x, "-");
-		list = list->next;
-	}
+	for (auto&& shot : list )
+		mvwprintw(this->win, shot.second.y, shot.second.x, "-");
 	return ;
 }
 
@@ -293,7 +196,7 @@ void		Game::display( void ) const {
 		position = star->getPositions();
 		mvwprintw(this->win, position.y, position.x, ".");
 	}
-//	this->displayShots();
+	this->displayShots();
 	for ( auto&& ship : Game::ships ) {
 		if (ship->getType() == "Player") {
 			wattron(this->win, COLOR_PAIR(1));

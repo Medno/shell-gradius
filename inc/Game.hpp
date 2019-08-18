@@ -10,17 +10,6 @@ class AShips;
 class AElement;
 class Stars;
 
-/*
-typedef struct	s_ships {
-	AShips*			ship;
-	struct s_ships*	next;
-}				t_ships;
-
-typedef struct	s_stars {
-	AElement*		star;
-	struct s_stars*	next;
-}				t_stars;
-*/
 class	Game {
 public:
 	~Game( void );
@@ -50,24 +39,18 @@ public:
 
 protected:
 	std::vector<AElement *>	stars;
-	WINDOW*		win;
-	t_vector	wSize;
 	int			time;
 	int 		score;
 	Game( void );
 
-
 private:
-	/*
-	int		handlePlayer( t_ships* const & );
-	int		moveEnemies( t_ships* const & );
-	int		moveBoss( t_ships* const & );
-	*/
 	void	spawnEnemy( void );
 	int		checkPositions( void );
 	void	displayShots( void ) const;
 	int		destroyKilled( void );
 	static std::vector<AShips *>	ships;
+	static WINDOW*		win;
+	static t_vector	wSize;
 };
 
 #endif

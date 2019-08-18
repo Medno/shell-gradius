@@ -1,0 +1,11 @@
+Refonte du jeu:
+
+	-	Comment structurer les vaisseaux dans le jeu ?
+		-> Faire un tableau static ?
+			- Faire une classe avec des pointeurs sur fonctions ?
+				- C'est vrai que une classe par vaisseau peut etre repetitif et lourd
+		-> Tableau dans le Game ?
+
+	-	Comment structurer le decor dans le jeu ?
+		-> Ou se situerait l'update ?
+			- Remove des etoiles si les coordonees sont a 0

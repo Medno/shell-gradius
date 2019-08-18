@@ -1,18 +1,12 @@
 #include "AShips.hpp"
 
+std::vector<AShips::shot>	AShips::shots = {};
+
 AShips::AShips( void ) {}
-
-AShips::AShips( std::string const & type, t_vector const & coord )
-	: AElement( coord ), type(type) {
-//	std::cout << "AShips has been created" << std::endl;
-	return ;
-}
-
 AShips::AShips( AShips const & src ) {
 	*this = src;
 	return ;
 }
-
 AShips &	AShips::operator=( AShips const & rhs ) {
 	if ( this != &rhs ) {
 		this->positions = rhs.getPositions();
@@ -20,85 +14,47 @@ AShips &	AShips::operator=( AShips const & rhs ) {
 	return *this;
 }
 
+AShips::AShips( std::string const & type, t_vector const & coord )
+	: AElement( coord ), type(type) {}
+
 std::string	AShips::getType( void ) const {
 	return this->type;
 }
 
-void	AShips::setShots( t_shots * const & shot ) {
-	AShips::shots = shot;
-	return ;
-}
-t_shots*	AShips::getShots( void ) {
+std::vector<AShips::shot>	AShips::getShots( void ) {
 	return AShips::shots;
 }
 
-void		AShips::moveShots( void ) {
-	t_shots*	shot = AShips::getShots();
-
-	while (shot) {
-		shot->positions.x += 1;
-		shot = shot->next;
-	}
+void	AShips::pushShot( entity ent, t_vector position ) {
+	AShips::shots.push_back({ ent, position });
+	LOG(std::to_string(AShips::shots.size()))
 }
 
-bool		AShips::checkShotPosition( t_shots * const & shot, int const & x ) {
-	if ( shot->positions.x == x )
-		return true;
-	return false;
+void	AShips::moveShots( void ) {
+	for (auto&& shot : AShips::shots )
+		shot.second.x += 1;
 }
 
-bool		AShips::checkShotPosition( t_shots * const & shot, t_vector const & pos ) {
-	if ( shot->positions.x == pos.x && shot->positions.y == pos.y )
-		return true;
-	return false;
+bool		AShips::checkShotPosition( AShips::shot const & shot, int const & x ) {
+	return shot.second.x == x;
 }
 
-void		AShips::popBordersShots( t_vector const & wLimits ) {
-	t_shots*	tmp = AShips::shots;
+bool		AShips::checkShotPosition( AShips::shot const & shot, t_vector const & pos ) {
+	return ( shot.second.x == pos.x && shot.second.y == pos.y );
+}
 
-	while (tmp) {
-		if (AShips::checkShotPosition( tmp, 1 )
-			|| AShips::checkShotPosition( tmp, wLimits.x ))
-			tmp = AShips::popShot(tmp);
-		if (tmp)
-			tmp = tmp->next;
-	}
+void		AShips::popBordersShots( t_vector const & wSize ) {
+	AShips::shots.erase(std::remove_if(AShips::shots.begin(), AShips::shots.end(),
+		[wSize]( AShips::shot shot ){
+			return AShips::checkShotPosition( shot, 1 )
+				|| AShips::checkShotPosition( shot, wSize.x );
+		}), AShips::shots.end());
 	return ;
 }
 
-void		AShips::popShots( void ) {
-	t_shots*	tmp = AShips::shots;
-
-	while (AShips::shots) {
-		AShips::shots = AShips::shots->next;
-		delete tmp;
-		tmp = AShips::shots;
-	}
-	return ;
+void	AShips::popShot( int index ) {
+	AShips::shots.erase(AShips::shots.begin() + index);
 }
-
-t_shots*	AShips::popShot( t_shots * & shot ) {
-	t_shots*	tmp = AShips::shots;
-
-	while (tmp) {
-		if (tmp == shot) {
-			AShips::shots = tmp->next;
-			delete shot;
-			tmp = AShips::shots;
-			break;
-		}
-		else if (tmp->next && tmp->next == shot) {
-			tmp->next = tmp->next->next;
-			delete shot;
-			break ;
-		}
-		tmp = tmp->next;
-	}
-	return tmp;
-}
-
-
-t_shots*	AShips::shots = NULL;
 
 std::ostream & operator<<( std::ostream & o, AShips const & rhs ) {
 	t_vector	positions = rhs.getPositions();

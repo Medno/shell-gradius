@@ -18,7 +18,7 @@ int		Boss::update( void ) {
 	if (positionsBoss.x > positionsPlayer.x + 50)
 		positionsBoss.x -= 1;
 	else if (positionsBoss.x < positionsPlayer.x + 20 &&
-		positionsBoss.x < this->wSize.x - 1)
+		positionsBoss.x < this->getWSize().x - 1)
 		positionsBoss.x += 1;
 	if (positionsBoss.y > positionsPlayer.y)
 		positionsBoss.y -= 1;
