@@ -1,28 +1,14 @@
 #include "Boss.hpp"
 
-Boss::Boss( t_vector const & positions ) : Enemy( "Boss", positions ) {
-}
-
-Boss::~Boss( void ) {
-//	std::cout << "Piouuuuuuuuuuupoc" << std::endl;
-}
-
-Boss::Boss( Boss const & src ) {
-	*this = src;
-	return ;
-}
-
-Boss &	Boss::operator=( Boss const & ) {
-	return *this;
-}
+Boss::Boss( t_vector const & positions ) : Enemy( "Boss", positions ) {}
+Boss::~Boss( void ) {}
+Boss::Boss( Boss const & src ) { *this = src; }
+Boss &	Boss::operator=( Boss const & ) { return *this; }
 
 AElement*	Boss::clone( void ) const {
 	return new Boss(*this);
 }
-
-void	Boss::fire( void ) {
-//	std::cout << "* piou piou *" << std::endl;
-}
+void	Boss::fire( void ) {}
 
 int		Boss::update( void ) {
 	t_vector	positionsPlayer = this->getPlayer()->getPositions();

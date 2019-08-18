@@ -13,10 +13,9 @@ public:
 	Enemy( std::string const &, t_vector const & );
 
 	virtual void	fire( void ) = 0;
-	void	spawn( void );
 
 protected:
-	Enemy( void );		// Create a random type enemy ?
+	Enemy( void );
 
 private:
 };
