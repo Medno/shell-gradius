@@ -17,6 +17,6 @@ Rendered project didn't used the STL library, it was edited for flexibility and 
 On UNIX-like systems, use the autotools based build system. Run the following commands from the top directory (containing this file) to configure, build and install:
 
 ```console
-shell_graduis_repository $> make
-shell_graduis_repository $> ./ft_retro
+shell_gradius_repository $> make
+shell_gradius_repository $> ./ft_retro
 ```
